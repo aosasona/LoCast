@@ -1,10 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>remote-notification</string>
-	</array>
-</dict>
+	<dict>
+		<key>UIAppFonts</key>
+		<array>
+			<string>JetBrainsMono-Bold.ttf</string>
+			<string>JetBrainsMono-BoldItalic.ttf</string>
+			<string>JetBrainsMono-ExtraBold.ttf</string>
+			<string>JetBrainsMono-ExtraBoldItalic.ttf</string>
+			<string>JetBrainsMono-ExtraLight.ttf</string>
+			<string>JetBrainsMono-ExtraLightItalic.ttf</string>
+			<string>JetBrainsMono-Italic.ttf</string>
+			<string>JetBrainsMono-Light.ttf</string>
+			<string>JetBrainsMono-LightItalic.ttf</string>
+			<string>JetBrainsMono-Medium.ttf</string>
+			<string>JetBrainsMono-MediumItalic.ttf</string>
+			<string>JetBrainsMono-Regular.ttf</string>
+			<string>JetBrainsMono-SemiBold.ttf</string>
+			<string>JetBrainsMono-SemiBoldItalic.ttf</string>
+			<string>JetBrainsMono-Thin.ttf</string>
+			<string>JetBrainsMono-ThinItalic.ttf</string>
+		</array>
+		<key>UIBackgroundModes</key>
+		<array>
+			<string>remote-notification</string>
+		</array>
+	</dict>
 </plist>
