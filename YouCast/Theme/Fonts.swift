@@ -29,7 +29,7 @@ enum JetbrainsMono: String {
 }
 
 enum FontSize: CGFloat {
-    case body = 14
+    case body = 13
     case caption = 12
     case heading = 20
     case subtitle = 16
