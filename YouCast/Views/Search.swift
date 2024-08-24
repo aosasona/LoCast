@@ -16,11 +16,7 @@ struct Search: View {
                 Text("Searching for \(searchQuery)")
             }
             .navigationTitle("Search")
-            #if os(iOS) || os(tvOS) || targetEnvironment(macCatalyst)
             .searchable(text: $searchQuery, placement: .navigationBarDrawer(displayMode: .always), prompt: "Title, Collections, Transcripts and More")
-            #elseif os(macOS)
-            .searchable(text: $searchQuery, placement: .automatic, prompt: "Title, Collections, Transcripts and More")
-#endif
         }
     }
 }

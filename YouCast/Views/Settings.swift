@@ -8,8 +8,20 @@
 import SwiftUI
 
 struct Settings: View {
+    @StateObject var viewModel = SettingsViewModel()
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Form {
+            Section {
+                Toggle(isOn: $viewModel.autoPasteFromClipboard) {
+                    Label("Auto-Paste From Clipboard", systemImage: "clipboard")
+                }
+            }
+        }
+        .navigationTitle("Settings")
+        .onChange(of: viewModel.autoPasteFromClipboard) {
+            SettingsKVStore.set($1, for: .autoPasteFromClipboard)
+        }
     }
 }
 

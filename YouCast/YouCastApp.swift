@@ -5,7 +5,6 @@
 //  Created by Ayodeji Osasona on 22/08/2024.
 //
 
-import Core
 import SwiftData
 import SwiftUI
 

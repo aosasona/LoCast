@@ -51,7 +51,7 @@ enum Fonts {
         )
     }
 
-    func toFont(_ size: FontSize) -> Font {
+    func toFont(_ size: FontSize = .body) -> Font {
         toFont(size.rawValue)
     }
 }

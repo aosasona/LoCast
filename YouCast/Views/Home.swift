@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Home: View {
     @StateObject var viewModel = HomeViewModel()
+    @StateObject var importViewModel = ImportViewModel()
 
     var body: some View {
         NavigationStack {
@@ -19,22 +20,48 @@ struct Home: View {
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     Menu {
-                        Button("Subscribe to a channel", action: {})
+                        Button(action: {}) {
+                            Label("Subscribe to feed", systemImage: "dot.radiowaves.left.and.right")
+                        }
+
+                        Button(action: { viewModel.showSettingsSheet.toggle() }) {
+                            Label("Settings", systemImage: "gearshape")
+                        }
                     } label: {
                         Label("Menu", systemImage: "ellipsis.circle")
                     }
 
-                    Button(action: { viewModel.showImportDialog.toggle() }) {
+                    Button(action: { viewModel.showImportSheet.toggle() }) {
                         Label("Import", systemImage: "plus")
                     }
                 }
             }
-            .alert("Import", isPresented: $viewModel.showImportDialog) {
-                TextField("Enter a video URL", text: $viewModel.videoURL)
-                Button("Cancel", role: .cancel) {}
-                Button("Continue", action: {}).disabled(!viewModel.canContinueImport)
-            } message: {
-                Text("Enter a valid video URL to import")
+            .sheet(isPresented: $viewModel.showImportSheet, onDismiss: importViewModel.resetImportStates) {
+                NavigationStack {
+                    ImportVideoAndPlaylist(viewModel: importViewModel)
+                }
+            }
+            .sheet(isPresented: $viewModel.showSettingsSheet) {
+                NavigationStack {
+                    Settings()
+                }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)) { _ in
+                // Only auto-paste if it is enabled and the user isn't already trying to import something
+                if SettingsKVStore.get(for: .autoPasteFromClipboard) && !viewModel.showImportSheet {
+                    guard let copiedText = UIPasteboard.general.url else { return }
+
+                    // Ensure it is a valid YouTube link
+                    if !copiedText.absoluteString.contains("youtube.com") {
+                        return
+                    }
+
+                    // Clear the clipboard
+                    UIPasteboard.general.urls = []
+
+                    viewModel.showImportSheet.toggle()
+                    importViewModel.setURL(copiedText)
+                }
             }
         }
     }
