@@ -47,8 +47,7 @@ enum Fonts {
 
     func toFont(_ size: CGFloat) -> Font {
         Font(
-            UIFont(name: getFontName(), size: size)
-                ?? UIFont.systemFont(ofSize: size)
+            UIFont(name: getFontName(), size: size) ?? UIFont.systemFont(ofSize: size)
         )
     }
 

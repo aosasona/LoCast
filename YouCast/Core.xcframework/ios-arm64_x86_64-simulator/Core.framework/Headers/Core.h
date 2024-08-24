@@ -7,7 +7,7 @@
 #ifndef __Core_FRAMEWORK_H__
 #define __Core_FRAMEWORK_H__
 
-#include "Youcast.objc.h"
+#include "Core.objc.h"
 #include "Universe.objc.h"
 
 #endif

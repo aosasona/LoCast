@@ -1,6 +1,6 @@
 framework module "Core" {
 	header "ref.h"
-    header "Youcast.objc.h"
+    header "Core.objc.h"
     header "Universe.objc.h"
     header "Core.h"
 
