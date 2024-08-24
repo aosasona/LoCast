@@ -2,13 +2,17 @@ package core
 
 import "github.com/kkdai/youtube/v2"
 
-type Core struct{}
-
-func New() *Core {
-	return &Core{}
+type Core struct {
+	youtubeClient *youtube.Client
 }
 
-func ExtractVideoID(url string) (string, error) {
+func New() *Core {
+	return &Core{
+		youtubeClient: &youtube.Client{},
+	}
+}
+
+func (c *Core) ExtractVideoID(url string) (string, error) {
 	videoID, err := youtube.ExtractVideoID(url)
 	if err != nil {
 		return "", err
