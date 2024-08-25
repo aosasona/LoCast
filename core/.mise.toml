@@ -4,5 +4,5 @@ go = "1.23.0"
 [tasks."build:core"]
 description = "Build xcframework for iOS using gomobile"
 # run = "gomobile bind -o ../Core.xcframework -target=ios -ldflags=-w -v"
-run = "gomobile bind -v -o ../YouCast/Shared.xcframework -target=ios,iossimulator -ldflags=-w ."
+run = "gomobile bind -v -o ../YouCast/Shared.xcframework -target=ios,iossimulator -ldflags=-w ./list ."
 dir = "./"
