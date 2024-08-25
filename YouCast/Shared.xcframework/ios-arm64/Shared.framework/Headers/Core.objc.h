@@ -10,8 +10,11 @@
 #include "ref.h"
 #include "Universe.objc.h"
 
+#include "List.objc.h"
 
 @class CoreCore;
+@class CorePlaylistMeta;
+@class CoreVideoMeta;
 
 @interface CoreCore : NSObject <goSeqRefInterface> {
 }
@@ -20,6 +23,40 @@
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
 - (NSString* _Nonnull)extractVideoID:(NSString* _Nullable)url error:(NSError* _Nullable* _Nullable)error;
+- (CorePlaylistMeta* _Nullable)getPlaylist:(NSString* _Nullable)url error:(NSError* _Nullable* _Nullable)error;
+- (CoreVideoMeta* _Nullable)getVideo:(NSString* _Nullable)url error:(NSError* _Nullable* _Nullable)error;
+@end
+
+@interface CorePlaylistMeta : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+@property (nonatomic) NSString* _Nonnull id_;
+@property (nonatomic) NSString* _Nonnull title;
+@property (nonatomic) NSString* _Nonnull description;
+@property (nonatomic) NSString* _Nonnull author;
+@property (nonatomic) ListPlaylistEntryList* _Nullable videos;
+@end
+
+@interface CoreVideoMeta : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+@property (nonatomic) NSString* _Nonnull id_;
+@property (nonatomic) NSString* _Nonnull title;
+@property (nonatomic) NSString* _Nonnull description;
+@property (nonatomic) NSString* _Nonnull author;
+@property (nonatomic) NSString* _Nonnull channelID;
+@property (nonatomic) NSString* _Nonnull channelHandle;
+@property (nonatomic) long views;
+@property (nonatomic) int64_t durationMs;
+@property (nonatomic) int64_t unixPublishDate;
+@property (nonatomic) ListFormatList* _Nullable formats;
+@property (nonatomic) ListThumbnailList* _Nullable thumbnails;
 @end
 
 FOUNDATION_EXPORT CoreCore* _Nullable CoreNew(void);

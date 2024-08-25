@@ -9,6 +9,4 @@ import SwiftUI
 class HomeViewModel: ObservableObject {
     @Published var showImportSheet: Bool = false
     @Published var showSettingsSheet: Bool = false
-
-    
 }

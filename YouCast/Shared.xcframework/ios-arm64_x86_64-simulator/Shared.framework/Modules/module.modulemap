@@ -1,5 +1,6 @@
 framework module "Shared" {
 	header "ref.h"
+    header "List.objc.h"
     header "Core.objc.h"
     header "Universe.objc.h"
     header "Shared.h"

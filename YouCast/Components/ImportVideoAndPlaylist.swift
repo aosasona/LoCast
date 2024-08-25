@@ -16,19 +16,19 @@ struct ImportVideoAndPlaylist: View {
                 TextField("Enter a video or playlist URL", text: viewModel.videoURLString)
                     .keyboardType(.URL)
                     .lineLimit(1)
-
-                Button(action: {}) {
-                    Label("Load metadata", systemImage: "arrow.2.circlepath")
-                }
             }
 
-            Button("Continue", action: viewModel.importFromURL)
+            Button("Continue", action: self.proceedToImportConfirmation)
                 .buttonStyle(.fullWidth)
                 .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .listRowBackground(Color.clear)
-            //                .disabled(!viewModel.canContinue)
+                .disabled(!viewModel.canContinue)
         }
         .navigationTitle("Add to library")
+    }
+    
+    func proceedToImportConfirmation() {
+        viewModel.loadMetaData()
     }
 }
 
