@@ -8,7 +8,8 @@
 import Foundation
 
 enum CoreError: Error {
-    case raw(String)
+    case presentable(String)
+    case raw(Error)
 }
 
 func unwrapNSErrorPointer(_ rawError: NSErrorPointer?) -> Error? {
@@ -22,7 +23,7 @@ func unwrapCoreError<T>(_ body: @escaping ((NSErrorPointer) -> T)) throws -> T {
     
     let result = body(error)
     if let err = unwrapNSErrorPointer(error) {
-        throw CoreError.raw(err.localizedDescription)
+        throw CoreError.presentable(err.localizedDescription)
     }
     
     return result

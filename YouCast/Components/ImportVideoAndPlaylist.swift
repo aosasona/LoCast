@@ -13,22 +13,32 @@ struct ImportVideoAndPlaylist: View {
     var body: some View {
         Form {
             Section {
-                TextField("Enter a video or playlist URL", text: viewModel.videoURLString)
+                Label("Enter a video or playlist URL", systemImage: "link")
+                TextField("e.g. https://www.youtube.com/watch?v=xxxxxxx", text: viewModel.videoURLString)
                     .keyboardType(.URL)
                     .lineLimit(1)
             }
 
-            Button("Continue", action: self.proceedToImportConfirmation)
-                .buttonStyle(.fullWidth)
-                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .listRowBackground(Color.clear)
-                .disabled(!viewModel.canContinue)
+            Button(action: self.proceedToImportConfirmation) {
+                if viewModel.isLoadingMeta {
+                    ProgressView()
+                } else {
+                    Text("Continue")
+                }
+            }
+            .buttonStyle(.fullWidth)
+            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .listRowBackground(Color.clear)
+            .disabled(!viewModel.canContinue || viewModel.isLoadingMeta)
         }
         .navigationTitle("Add to library")
+        .onChange(of: viewModel.error) { oldValue, newValue in
+            // TODO: handle error, maybe use an alert directly
+        }
     }
-    
+
     func proceedToImportConfirmation() {
-        viewModel.loadMetaData()
+        DispatchQueue.global().async { viewModel.loadMetadata() }
     }
 }
 

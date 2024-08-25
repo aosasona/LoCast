@@ -49,7 +49,7 @@ func (c *Core) ExtractVideoID(url string) (string, error) {
 	return videoID, nil
 }
 
-func (c *Core) GetVideo(url string) (*VideoMeta, error) {
+func (c *Core) GetVideoMeta(url string) (*VideoMeta, error) {
 	video, err := c.youtubeClient.GetVideo(url)
 	if err != nil {
 		return nil, err
@@ -75,7 +75,7 @@ func (c *Core) GetVideo(url string) (*VideoMeta, error) {
 	return &meta, nil
 }
 
-func (c *Core) GetPlaylist(url string) (*PlaylistMeta, error) {
+func (c *Core) GetPlaylistMeta(url string) (*PlaylistMeta, error) {
 	playlist, err := c.youtubeClient.GetPlaylist(url)
 	if err != nil {
 		return nil, err

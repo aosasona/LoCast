@@ -23,8 +23,8 @@
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
 - (NSString* _Nonnull)extractVideoID:(NSString* _Nullable)url error:(NSError* _Nullable* _Nullable)error;
-- (CorePlaylistMeta* _Nullable)getPlaylist:(NSString* _Nullable)url error:(NSError* _Nullable* _Nullable)error;
-- (CoreVideoMeta* _Nullable)getVideo:(NSString* _Nullable)url error:(NSError* _Nullable* _Nullable)error;
+- (CorePlaylistMeta* _Nullable)getPlaylistMeta:(NSString* _Nullable)url error:(NSError* _Nullable* _Nullable)error;
+- (CoreVideoMeta* _Nullable)getVideoMeta:(NSString* _Nullable)url error:(NSError* _Nullable* _Nullable)error;
 @end
 
 @interface CorePlaylistMeta : NSObject <goSeqRefInterface> {

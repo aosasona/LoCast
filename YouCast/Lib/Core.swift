@@ -4,6 +4,8 @@ import Foundation
 import Shared
 
 typealias GoCore = Shared.CoreCore
+typealias VideoMetadata = Shared.CoreVideoMeta
+typealias PlaylistMetadata = Shared.CorePlaylistMeta
 
 class Core {
     static let shared: Core = .init()
@@ -24,7 +26,7 @@ class Core {
         if result.isEmpty {
             return nil
         }
-        
+
         return result
     }
 
@@ -32,12 +34,30 @@ class Core {
         guard let playlistID = url.getQueryParam("list") else {
             return nil
         }
-        
+
         // Redundant, yes, but cautionary
         if playlistID.isEmpty {
             return nil
         }
-        
+
         return playlistID
+    }
+
+    func getVideoMeta(url: URL) throws -> VideoMetadata {
+        do {
+            let result = try self._core.getVideoMeta(url.absoluteString)
+            return result
+        } catch {
+            throw CoreError.raw(error)
+        }
+    }
+    
+    func getPlaylistMeta(url: URL) throws -> PlaylistMetadata {
+        do {
+            let result = try self._core.getPlaylistMeta(url.absoluteString)
+            return result
+        } catch {
+            throw CoreError.raw(error)
+        }
     }
 }
