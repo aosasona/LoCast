@@ -31,12 +31,49 @@ func (t *ThumbnailList) Add(thumbnail Thumbnail) *ThumbnailList {
 	return t
 }
 
+// This is required for the Swift wrapper to work, only the pointer type for a struct will be generated
+func (t *ThumbnailList) AddPtr(thumbnail *Thumbnail) *ThumbnailList {
+	t.items = append(t.items, *thumbnail)
+	return t
+}
+
+func (t *ThumbnailList) GetHighestResolution() *Thumbnail {
+	if len(t.items) == 0 {
+		return nil
+	}
+
+	highestRes := t.items[0]
+	for _, thumbnail := range t.items {
+		if thumbnail.Width > highestRes.Width {
+			highestRes = thumbnail
+		}
+	}
+
+	return &highestRes
+}
+
 func (t *ThumbnailList) Get(index int) *Thumbnail {
 	if index < 0 || index >= len(t.items) {
 		return nil
 	}
 
 	return &t.items[index]
+}
+
+func (t *ThumbnailList) First() *Thumbnail {
+	if len(t.items) == 0 {
+		return nil
+	}
+
+	return &t.items[0]
+}
+
+func (t *ThumbnailList) Last() *Thumbnail {
+	if len(t.items) == 0 {
+		return nil
+	}
+
+	return &t.items[len(t.items)-1]
 }
 
 func (t *ThumbnailList) From(thumbnails []youtube.Thumbnail) *ThumbnailList {
