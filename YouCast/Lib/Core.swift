@@ -7,6 +7,9 @@ typealias GoCore = Shared.CoreCore
 typealias VideoMetadata = Shared.CoreVideoMeta
 typealias PlaylistMetadata = Shared.CorePlaylistMeta
 
+typealias ThumbnailList = ListThumbnailList
+typealias Thumbnail = ListThumbnail
+
 class Core {
     static let shared: Core = .init()
 

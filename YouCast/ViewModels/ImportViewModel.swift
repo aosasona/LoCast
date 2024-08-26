@@ -13,9 +13,51 @@ enum LinkType {
     case none
 }
 
+struct LinkInfo {
+    let title: String?
+    let author: String?
+    let description: String?
+    let thumbnail: Thumbnail?
+}
+
 enum Meta {
     case playlist(PlaylistMetadata)
     case video(VideoMetadata)
+    
+    func info() -> LinkInfo {
+        var title: String?
+        var author: String?
+        var description: String?
+        var thumbnail: Thumbnail?
+        
+        if case .playlist(let playlist) = self {
+            title = playlist.title
+            author = playlist.author
+            description = playlist.description
+            thumbnail = playlist.getFirstNonEmptyThumbnail()
+        } else if case .video(let video) = self {
+            title = video.title
+            author = video.author
+            description = video.description
+            thumbnail = video.thumbnails?.getHighestResolution()
+        }
+        
+        return .init(title: title, author: author, description: description, thumbnail: thumbnail)
+    }
+    
+    var title: String? {
+        switch self {
+        case .playlist(let playlist): return playlist.title
+        case .video(let video): return video.title
+        }
+    }
+    
+    var author: String? {
+        switch self {
+        case .playlist(let playlist): return playlist.author
+        case .video(let video): return video.author
+        }
+    }
 }
 
 class ImportViewModel: ObservableObject {
@@ -65,27 +107,36 @@ class ImportViewModel: ObservableObject {
             case .video:
                 let videoMeta = try Core.shared.getVideoMeta(url: url)
                 DispatchQueue.main.async { self.meta = .video(videoMeta) }
-                    
-                print("Video: \(videoMeta.title)") // TODO: remove
+//                let thumbnail = videoMeta.thumbnails?.getHighestResolution()
+//                print("""
+//                Title:          \(videoMeta.title)
+//                Channel ID:     \(videoMeta.channelID)
+//                Channel handle: \(videoMeta.channelHandle)
+//                Author:         \(videoMeta.author)
+//                Views:          \(videoMeta.views)
+//
+//                ------------ Thumbnail -------------
+//                Width:          \(thumbnail?.width ?? 0)
+//                Height:         \(thumbnail?.height ?? 0)
+//                Source URL:     \(thumbnail?.sourceURL ?? "")
+//                """)
             case .playlist:
                 let playlistMeta = try Core.shared.getPlaylistMeta(url: url)
                 DispatchQueue.main.async { self.meta = .playlist(playlistMeta) }
-                    
-                print("Playlist: \(playlistMeta.title)") // TODO: remove
             case .none:
                 throw CoreError.presentable("Unable to infer link type")
             }
-            
-            DispatchQueue.main.async {
-                withAnimation { self.isLoadingMeta = false }
-            }
-        } catch let CoreError.presentable(err) {
+        } catch CoreError.presentable(let err) {
             setError(err)
             return
         } catch {
             setError("Failed to extract video ID, something went wrong, please try again")
             print("[loadMetadata] An error occurred: \(error.localizedDescription)")
             return
+        }
+        
+        DispatchQueue.main.async {
+            withAnimation { self.isLoadingMeta = false }
         }
     }
     

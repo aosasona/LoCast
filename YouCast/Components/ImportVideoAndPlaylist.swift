@@ -19,26 +19,42 @@ struct ImportVideoAndPlaylist: View {
                     .lineLimit(1)
             }
 
-            Button(action: self.proceedToImportConfirmation) {
-                if viewModel.isLoadingMeta {
-                    ProgressView()
-                } else {
-                    Text("Continue")
+            Section {
+                Button(action: self.pasteFromClipboard) {
+                    Label("Paste from clipboard", systemImage: "clipboard")
                 }
             }
-            .buttonStyle(.fullWidth)
-            .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
-            .listRowBackground(Color.clear)
-            .disabled(!viewModel.canContinue || viewModel.isLoadingMeta)
+
+            Section {
+                Button(action: self.proceedToImportConfirmation) {
+                    if viewModel.isLoadingMeta {
+                        ProgressView()
+                    } else {
+                        Text("Continue")
+                    }
+                }
+                .buttonStyle(.fullWidth)
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .listRowBackground(Color.clear)
+                .disabled(!viewModel.canContinue || viewModel.isLoadingMeta)
+            }
         }
         .navigationTitle("Add to library")
-        .onChange(of: viewModel.error) { oldValue, newValue in
+        .onChange(of: viewModel.error) { _, _ in
             // TODO: handle error, maybe use an alert directly
         }
     }
 
     func proceedToImportConfirmation() {
         DispatchQueue.global().async { viewModel.loadMetadata() }
+    }
+
+    private func pasteFromClipboard() {
+        let pasteboard = UIPasteboard.general
+
+        if let urlString = pasteboard.string {
+            viewModel.videoURLString.wrappedValue = urlString
+        }
     }
 }
 
