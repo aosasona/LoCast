@@ -38,6 +38,10 @@
 @property (nonatomic) NSString* _Nonnull description;
 @property (nonatomic) NSString* _Nonnull author;
 @property (nonatomic) ListPlaylistEntryList* _Nullable videos;
+/**
+ * GetHighestResolution returns the first non-empty thumbnail with the highest resolution
+ */
+- (ListThumbnail* _Nullable)getFirstNonEmptyThumbnail;
 @end
 
 @interface CoreVideoMeta : NSObject <goSeqRefInterface> {

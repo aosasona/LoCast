@@ -151,12 +151,19 @@
 - (nullable instancetype)init;
 // skipped method ThumbnailList.Add with unsupported parameter or return types
 
+/**
+ * This is required for the Swift wrapper to work, only the pointer type for a struct will be generated
+ */
+- (ListThumbnailList* _Nullable)addPtr:(ListThumbnail* _Nullable)thumbnail;
 - (ListThumbnailList* _Nullable)clear;
 - (long)count;
+- (ListThumbnail* _Nullable)first;
 // skipped method ThumbnailList.From with unsupported parameter or return types
 
 - (ListThumbnail* _Nullable)get:(long)index;
+- (ListThumbnail* _Nullable)getHighestResolution;
 - (void)iterate:(id<ListThumbnailIterator> _Nullable)iterator;
+- (ListThumbnail* _Nullable)last;
 - (ListThumbnailList* _Nullable)remove:(long)index;
 @end
 
