@@ -65,6 +65,14 @@ func (p *PlaylistMeta) GetTotalDurationMs() int64 {
 	return totalDuration
 }
 
+func (p *PlaylistMeta) GetVideoCount() int {
+	if p.Videos == nil {
+		return 0
+	}
+
+	return p.Videos.Count()
+}
+
 func (c *Core) GetVideoMeta(url string) (*VideoMeta, error) {
 	video, err := c.youtubeClient.GetVideo(url)
 	if err != nil {
