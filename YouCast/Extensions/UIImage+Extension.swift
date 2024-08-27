@@ -6,6 +6,7 @@
 //
 import Foundation
 import UIKit
+import SwiftUI
 
 extension UIImage {
     var averageColor: UIColor? {
@@ -22,4 +23,14 @@ extension UIImage {
         
         return UIColor(red: CGFloat(bitmap[0]) / 255, green: CGFloat(bitmap[1]) / 255, blue: CGFloat(bitmap[2]) / 255, alpha: CGFloat(bitmap[3]) / 255)
     }
+    
+    var getColor: Color {
+        var hue: CGFloat = 0
+        var saturation: CGFloat = 0
+        var brightness: CGFloat = 0
+        var alpha: CGFloat = 0
+        self.averageColor?.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        return Color(UIColor(hue: hue, saturation: 0.9, brightness: 0.06, alpha: alpha))
+    }
+
 }

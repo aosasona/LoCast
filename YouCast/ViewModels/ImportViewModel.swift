@@ -20,6 +20,13 @@ struct LinkInfo {
     let thumbnail: Thumbnail?
 }
 
+struct LinkMeta {
+    let rawMeta: Meta
+    let info: LinkInfo
+    var thumbnail: Thumbnail? = nil
+    var resolvedThumbnailImage: UIImage? = nil
+}
+
 enum Meta {
     case playlist(PlaylistMetadata)
     case video(VideoMetadata)
@@ -44,28 +51,21 @@ enum Meta {
         
         return .init(title: title, author: author, description: description, thumbnail: thumbnail)
     }
-    
-    var title: String? {
-        switch self {
-        case .playlist(let playlist): return playlist.title
-        case .video(let video): return video.title
-        }
-    }
-    
-    var author: String? {
-        switch self {
-        case .playlist(let playlist): return playlist.author
-        case .video(let video): return video.author
-        }
-    }
 }
 
 class ImportViewModel: ObservableObject {
     @Published var videoURL: URL? = nil
+    @Published var linkMeta: LinkMeta? = nil
+
     @Published var error: String? = nil
+    var hasError: Binding<Bool> {
+        return .init(
+            get: { self.error != nil },
+            set: { _ in }
+        )
+    }
     
-    @Published var meta: Meta? = nil
-    
+    @Published var showPreview: Bool = false
     @Published var isLoadingMeta: Bool = false
 
     var canContinue: Bool { return videoURL != nil && !videoURL!.absoluteString.isEmpty }
@@ -103,29 +103,41 @@ class ImportViewModel: ObservableObject {
                 withAnimation { self.isLoadingMeta = true }
             }
             
+            defer {
+                DispatchQueue.main.async {
+                    withAnimation { self.isLoadingMeta = false }
+                }
+            }
+
+            let meta: Meta
             switch linkType {
             case .video:
                 let videoMeta = try Core.shared.getVideoMeta(url: url)
-                DispatchQueue.main.async { self.meta = .video(videoMeta) }
-//                let thumbnail = videoMeta.thumbnails?.getHighestResolution()
-//                print("""
-//                Title:          \(videoMeta.title)
-//                Channel ID:     \(videoMeta.channelID)
-//                Channel handle: \(videoMeta.channelHandle)
-//                Author:         \(videoMeta.author)
-//                Views:          \(videoMeta.views)
-//
-//                ------------ Thumbnail -------------
-//                Width:          \(thumbnail?.width ?? 0)
-//                Height:         \(thumbnail?.height ?? 0)
-//                Source URL:     \(thumbnail?.sourceURL ?? "")
-//                """)
+                meta = .video(videoMeta)
             case .playlist:
                 let playlistMeta = try Core.shared.getPlaylistMeta(url: url)
-                DispatchQueue.main.async { self.meta = .playlist(playlistMeta) }
+                meta = .playlist(playlistMeta)
             case .none:
                 throw CoreError.presentable("Unable to infer link type")
             }
+            
+            DispatchQueue.main.async { self.linkMeta = LinkMeta(rawMeta: meta, info: meta.info()) }
+            if let thumb = meta.info().thumbnail {
+                DispatchQueue.main.async { self.linkMeta?.thumbnail = thumb } // Serves as a cache (sort of)
+                
+                DispatchQueue.global().async { [weak self] in
+                    guard let data = try? Data(contentsOf: URL(string: thumb.sourceURL)!) else { return }
+                    guard let image = UIImage(data: data) else { return }
+                    DispatchQueue.main.async { self?.linkMeta?.resolvedThumbnailImage = image }
+                }
+                
+                if let image = linkMeta?.resolvedThumbnailImage {
+                    print("Color: \(image.averageColor ?? .clear)")
+                }
+            }
+            
+            DispatchQueue.main.async { self.showPreview = true }
+            
         } catch CoreError.presentable(let err) {
             setError(err)
             return
@@ -133,10 +145,6 @@ class ImportViewModel: ObservableObject {
             setError("Failed to extract video ID, something went wrong, please try again")
             print("[loadMetadata] An error occurred: \(error.localizedDescription)")
             return
-        }
-        
-        DispatchQueue.main.async {
-            withAnimation { self.isLoadingMeta = false }
         }
     }
     
@@ -154,6 +162,7 @@ class ImportViewModel: ObservableObject {
     }
     
     // Figure out what sort of link we have, most times, we have both the `v` and `list` in the query, so we need to check the presence of the list query params first
+    // TODO: account for links like this: https://youtu.be/OPckpjBSAOw?si=k4GMS1RQws1f9j23
     func inferLinkType() -> LinkType {
         guard let videoURL else { return .none }
         
@@ -169,9 +178,12 @@ class ImportViewModel: ObservableObject {
     func resetImportStates() {
         clearError()
         videoURL = nil
+        linkMeta = nil
     }
     
-    private func setError(_ error: String) { self.error = error }
-    
-    private func clearError() { error = nil }
+    private func setError(_ error: String) {
+        DispatchQueue.main.async { self.error = error }
+    }
+
+    func clearError() { error = nil }
 }

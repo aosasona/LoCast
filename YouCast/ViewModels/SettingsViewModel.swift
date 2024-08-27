@@ -8,10 +8,12 @@ import Foundation
 
 enum SettingsKey: String, CaseIterable {
     case autoPasteFromClipboard
+    case clearClipboardOnPaste
 }
 
 class SettingsViewModel: ObservableObject {
     @Published var autoPasteFromClipboard: Bool = SettingsKVStore.get(for: .autoPasteFromClipboard)
+    @Published var clearClipboardOnPaste: Bool = SettingsKVStore.get(for: .clearClipboardOnPaste)
 }
 
 class SettingsKVStore {

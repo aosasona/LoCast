@@ -12,7 +12,22 @@ struct LinkPreviewSheet: View {
 
     var body: some View {
         ZStack {
-            VStack(alignment: .center) {}
+            if let image = viewModel.linkMeta?.resolvedThumbnailImage {
+                Image(uiImage: image)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(minWidth: 0, maxWidth: .infinity)
+                    .ignoresSafeArea(.all)
+                    .blur(radius: 20)
+            } else {
+                Color(.background)
+                    .ignoresSafeArea(.all)
+                    .blur(radius: 18)
+            }
+
+            VStack(alignment: .center) {
+                Text("\(viewModel.linkMeta?.info.title ?? "")")
+            }
         }
     }
 }

@@ -16,6 +16,10 @@ struct Settings: View {
                 Toggle(isOn: $viewModel.autoPasteFromClipboard) {
                     Label("Auto-Paste From Clipboard", systemImage: "clipboard")
                 }
+                
+                Toggle(isOn: $viewModel.clearClipboardOnPaste) {
+                    Label("Clear Clipboard On Paste", systemImage: "trash")
+                }
             }
         }
         .navigationTitle("Settings")

@@ -40,8 +40,8 @@ struct ImportVideoAndPlaylist: View {
             }
         }
         .navigationTitle("Add to library")
-        .onChange(of: viewModel.error) { _, _ in
-            // TODO: handle error, maybe use an alert directly
+        .alert(viewModel.error ?? "", isPresented: viewModel.hasError) {
+            Button("OK") { viewModel.clearError() }
         }
     }
 

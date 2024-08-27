@@ -39,6 +39,9 @@ struct Home: View {
             .sheet(isPresented: $viewModel.showImportSheet, onDismiss: importViewModel.resetImportStates) {
                 NavigationStack {
                     ImportVideoAndPlaylist(viewModel: importViewModel)
+                        .fullScreenCover(isPresented: $importViewModel.showPreview, onDismiss: importViewModel.resetImportStates) {
+                            LinkPreviewSheet(viewModel: importViewModel)
+                        }
                 }
             }
             .sheet(isPresented: $viewModel.showSettingsSheet) {
@@ -56,8 +59,10 @@ struct Home: View {
                         return
                     }
 
-                    // Clear the clipboard
-                    UIPasteboard.general.urls = []
+                    if SettingsKVStore.get(for: .clearClipboardOnPaste) {
+                        // Clear the clipboard
+                        UIPasteboard.general.urls = []
+                    }
 
                     viewModel.showImportSheet.toggle()
                     importViewModel.setURL(copiedText)
