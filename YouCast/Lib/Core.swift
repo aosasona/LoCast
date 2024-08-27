@@ -23,6 +23,17 @@ class Core {
         self._core = core
     }
 
+    // Returns the duration in the format xx:xx:xx
+    func toHumanReadableDuration(durationMS: Int64) -> String {
+        let duration = TimeInterval(durationMS / 1000)
+
+        let hours = Int(duration / 3600)
+        let minutes = Int((duration - TimeInterval(hours) * 3600) / 60)
+        let seconds = Int(duration - TimeInterval(hours) * 3600 - TimeInterval(minutes) * 60)
+
+        return String(format: "%02d:%02d:%02d", hours, minutes, seconds)
+    }
+
     func extractVideoID(from url: URL) throws -> String? {
         // This will _ideally_ never be empty as long as there is no error but, checking regardless won't hurt
         let result = try! unwrapCoreError { self._core.extractVideoID(url.absoluteString, error: $0) }
@@ -54,7 +65,7 @@ class Core {
             throw CoreError.raw(error)
         }
     }
-    
+
     func getPlaylistMeta(url: URL) throws -> PlaylistMetadata {
         do {
             let result = try self._core.getPlaylistMeta(url.absoluteString)

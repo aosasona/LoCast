@@ -5,30 +5,146 @@
 //  Created by Ayodeji Osasona on 26/08/2024.
 //
 
+import SDWebImage
+import SDWebImageSwiftUI
 import SwiftUI
 
 struct LinkPreviewSheet: View {
+    @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: ImportViewModel
+    @State var showDescription: Bool = false
+
+    let cropValue: CGFloat = 120
+    let bgCropValue: CGFloat = 320
+    let imagePreviewSize: CGFloat = 240
 
     var body: some View {
         ZStack {
-            if let image = viewModel.linkMeta?.resolvedThumbnailImage {
-                Image(uiImage: image)
-                    .resizable()
+            GeometryReader { geo in
+                ThumbnailImage()
                     .aspectRatio(contentMode: .fill)
                     .frame(minWidth: 0, maxWidth: .infinity)
-                    .blur(radius: 20)
-                    .ignoresSafeArea(.all)
-            } else {
-                Color(.background)
-                    .ignoresSafeArea(.all)
-                    .blur(radius: 18)
+                    .frame(height: geo.size.height + bgCropValue)
+                    .offset(y: -(bgCropValue / 2))
+                    .blur(radius: 28)
+                    .brightness(-0.3)
             }
+            .ignoresSafeArea(.all)
 
             VStack(alignment: .center) {
-                Text("\(viewModel.linkMeta?.info.title ?? "")")
+                // FIXME: this is shitty
+                GeometryReader { geo in
+                    ThumbnailImage()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: geo.size.width, height: geo.size.height + cropValue)
+                        .offset(y: -(cropValue / 2))
+                }
+                .frame(width: imagePreviewSize, height: imagePreviewSize)
+                .clipped()
+                .cornerRadius(6)
+                .shadow(color: .black.opacity(0.7), radius: 20, x: 2, y: 0)
+                .padding()
+
+                if let channelId = viewModel.info?.channelId {
+                    HStack {
+                        Link(destination: URL(string: "https://www.youtube.com/channel/\(channelId)")!) {
+                            Text("\(viewModel.info?.author ?? "")")
+                                .foregroundStyle(.light)
+                        }
+
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundStyle(.light)
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom)
+                }
+
+                Text("\(viewModel.info?.title ?? "")")
+                    .foregroundStyle(.white.opacity(0.9))
+                    .font(.largeTitle.bold())
+                    .multilineTextAlignment(.center)
+                    .lineLimit(3)
+                    .padding(.horizontal)
+                    .padding(.bottom)
+
+                if viewModel.info?.isPlaylist == true {
+                    Text("Playlist · \(viewModel.info?.itemCount ?? 0) items")
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal)
+                        .padding(.vertical, 0)
+                        .padding(.bottom)
+                }
+
+                if let durationMs = viewModel.info?.durationMS {
+                    Text(Core.shared.toHumanReadableDuration(durationMS: durationMs))
+                        .foregroundStyle(.white)
+                        .font(.system(size: 13, weight: .light))
+                        .padding(.horizontal)
+                        .padding(.vertical, 0)
+                }
+            }
+            .frame(maxHeight: .infinity)
+            .safeAreaInset(edge: .bottom) {
+                VStack {
+                    Button(action: {}) {
+                        Label("Add to library", systemImage: "plus.circle")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundStyle(.dark)
+                            .padding()
+                            .background(.light)
+                            .clipShape(RoundedRectangle(cornerRadius: 30))
+                    }
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: closeSheet) {
+                        Label("Cancel", systemImage: "xmark")
+                    }
+                    .tint(.light)
+                }
+
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: openDescription) {
+                        Label("Description", systemImage: "info.circle")
+                    }
+                    .tint(.light)
+                }
+            }
+            .sheet(isPresented: $showDescription, onDismiss: { showDescription = false }) {
+                NavigationStack {
+                    VStack(alignment: .leading) {
+                        ScrollView {
+                            Text(viewModel.info?.description ?? "No description available.")
+                                .font(.body)
+                                .padding()
+                        }
+                    }
+                    .navigationTitle("Description")
+                }
             }
         }
+    }
+
+    @ViewBuilder func ThumbnailImage() -> some View {
+        WebImage(url: URL(string: viewModel.info?.thumbnail?.sourceURL ?? "")) { image in
+            image.resizable()
+        } placeholder: {
+            Color.black
+                .ignoresSafeArea(.all)
+                .blur(radius: 18)
+        }
+    }
+
+    func openDescription() {
+        showDescription = true
+    }
+
+    func closeSheet() {
+        viewModel.resetImportStates()
+        dismiss()
     }
 }
 

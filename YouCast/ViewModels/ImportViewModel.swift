@@ -7,7 +7,7 @@
 import Foundation
 import SwiftUI
 
-let mobileYoutubeLinkRegex = /^(http(s):\/\/)?(youtu\.be\/[a-zA-Z0-9]{10,})(.*)$/
+let mobileYoutubeLinkRegex = /^(http(s):\/\/)?(youtu\.be\/[a-zA-Z0-9_-]{10,})(.*)$/
 
 enum LinkType {
     case video
@@ -17,16 +17,13 @@ enum LinkType {
 
 struct LinkInfo {
     let title: String?
+    let channelId: String?
     let author: String?
     let description: String?
     let thumbnail: Thumbnail?
-}
-
-struct LinkMeta {
-    let rawMeta: Meta
-    let info: LinkInfo
-    var thumbnail: Thumbnail? = nil
-    var resolvedThumbnailImage: UIImage? = nil
+    let durationMS: Int64?
+    let itemCount: Int?
+    let isPlaylist: Bool
 }
 
 enum Meta {
@@ -38,26 +35,35 @@ enum Meta {
         var author: String?
         var description: String?
         var thumbnail: Thumbnail?
+        var channelId: String?
+        var durationMS: Int64?
+        var itemCount: Int?
+        var isPlaylist = false
         
         if case .playlist(let playlist) = self {
             title = playlist.title
             author = playlist.author
             description = playlist.description
             thumbnail = playlist.getFirstNonEmptyThumbnail()
+            durationMS = playlist.getTotalDurationMs()
+            itemCount = playlist.getVideoCount()
+            isPlaylist = true
         } else if case .video(let video) = self {
             title = video.title
             author = video.author
             description = video.description
             thumbnail = video.thumbnails?.getHighestResolution()
+            channelId = video.channelID
+            durationMS = video.durationMs
         }
         
-        return .init(title: title, author: author, description: description, thumbnail: thumbnail)
+        return .init(title: title, channelId: channelId, author: author, description: description, thumbnail: thumbnail, durationMS: durationMS, itemCount: itemCount, isPlaylist: isPlaylist)
     }
 }
 
 class ImportViewModel: ObservableObject {
     @Published var videoURL: URL? = nil
-    @Published var linkMeta: LinkMeta? = nil
+    @Published var info: LinkInfo? = nil
 
     @Published var error: String? = nil
     var hasError: Binding<Bool> {
@@ -123,29 +129,16 @@ class ImportViewModel: ObservableObject {
                 throw CoreError.presentable("Unable to infer link type")
             }
             
-            DispatchQueue.main.async { self.linkMeta = LinkMeta(rawMeta: meta, info: meta.info()) }
-            if let thumb = meta.info().thumbnail {
-                DispatchQueue.main.async { self.linkMeta?.thumbnail = thumb } // Serves as a cache (sort of)
-                
-                DispatchQueue.global().async { [weak self] in
-                    guard let data = try? Data(contentsOf: URL(string: thumb.sourceURL)!) else { return }
-                    guard let image = UIImage(data: data) else { return }
-                    DispatchQueue.main.async { self?.linkMeta?.resolvedThumbnailImage = image }
-                }
-                
-                //TODO: remove
-                if let image = linkMeta?.resolvedThumbnailImage {
-                    print("Color: \(image.averageColor ?? .clear)")
-                }
+            DispatchQueue.main.async {
+                self.info = meta.info()
+                self.showPreview = true
             }
-            
-            DispatchQueue.main.async { self.showPreview = true }
             
         } catch CoreError.presentable(let err) {
             setError(err)
             return
         } catch {
-            setError("Failed to extract video ID, something went wrong, please try again")
+            setError("Failed to load metadata, something went wrong, please try again")
             print("[loadMetadata] An error occurred: \(error.localizedDescription)")
             return
         }
@@ -184,12 +177,14 @@ class ImportViewModel: ObservableObject {
     func resetImportStates() {
         clearError()
         videoURL = nil
-        linkMeta = nil
+        info = nil
     }
     
     private func setError(_ error: String) {
         DispatchQueue.main.async { self.error = error }
     }
 
-    func clearError() { error = nil }
+    func clearError() {
+        DispatchQueue.main.async { self.error = nil }
+    }
 }

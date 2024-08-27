@@ -43,6 +43,7 @@
  */
 - (ListThumbnail* _Nullable)getFirstNonEmptyThumbnail;
 - (int64_t)getTotalDurationMs;
+- (long)getVideoCount;
 @end
 
 @interface CoreVideoMeta : NSObject <goSeqRefInterface> {

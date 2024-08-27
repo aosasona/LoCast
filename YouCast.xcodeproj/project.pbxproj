@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		EADF229B2C7E6F6A0007B6CB /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = EADF229A2C7E6F6A0007B6CB /* SDWebImage */; };
+		EADF229E2C7E70030007B6CB /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = EADF229D2C7E70030007B6CB /* SDWebImageSwiftUI */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		EAB7F1B82C77CE3700820F58 /* YouCast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YouCast.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EADF229E2C7E70030007B6CB /* SDWebImageSwiftUI in Frameworks */,
+				EADF229B2C7E6F6A0007B6CB /* SDWebImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +85,8 @@
 			);
 			name = YouCast;
 			packageProductDependencies = (
+				EADF229A2C7E6F6A0007B6CB /* SDWebImage */,
+				EADF229D2C7E70030007B6CB /* SDWebImageSwiftUI */,
 			);
 			productName = YouCast;
 			productReference = EAB7F1B82C77CE3700820F58 /* YouCast.app */;
@@ -107,6 +116,10 @@
 			);
 			mainGroup = EAB7F1AF2C77CE3700820F58;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				EADF22992C7E6F6A0007B6CB /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				EADF229C2C7E70030007B6CB /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EAB7F1B92C77CE3700820F58 /* Products */;
 			projectDirPath = "";
@@ -362,6 +375,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		EADF22992C7E6F6A0007B6CB /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.19.7;
+			};
+		};
+		EADF229C2C7E70030007B6CB /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EADF229A2C7E6F6A0007B6CB /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EADF22992C7E6F6A0007B6CB /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+		EADF229D2C7E70030007B6CB /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EADF229C2C7E70030007B6CB /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = EAB7F1B02C77CE3700820F58 /* Project object */;
 }
