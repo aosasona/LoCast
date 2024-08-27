@@ -42,6 +42,7 @@
  * GetHighestResolution returns the first non-empty thumbnail with the highest resolution
  */
 - (ListThumbnail* _Nullable)getFirstNonEmptyThumbnail;
+- (int64_t)getTotalDurationMs;
 @end
 
 @interface CoreVideoMeta : NSObject <goSeqRefInterface> {
