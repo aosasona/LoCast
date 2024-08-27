@@ -17,6 +17,10 @@ struct Root: View {
             Tab("Search", systemImage: "magnifyingglass") {
                 Search()
             }
+
+            Tab("Downloads", systemImage: "tray.and.arrow.down") {
+                Downloads()
+            }
         }
         .tabViewStyle(.sidebarAdaptable)
     }

@@ -40,7 +40,9 @@ struct Home: View {
                 NavigationStack {
                     ImportVideoAndPlaylist(viewModel: importViewModel)
                         .fullScreenCover(isPresented: $importViewModel.showPreview, onDismiss: importViewModel.resetImportStates) {
-                            LinkPreviewSheet(viewModel: importViewModel)
+                            NavigationStack {
+                                LinkPreviewSheet(viewModel: importViewModel)
+                            }
                         }
                 }
             }
