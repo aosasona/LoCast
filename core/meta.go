@@ -52,6 +52,19 @@ func (p *PlaylistMeta) GetFirstNonEmptyThumbnail() *list.Thumbnail {
 	return thumbnail
 }
 
+func (p *PlaylistMeta) GetTotalDurationMs() int64 {
+	if p.Videos == nil {
+		return 0
+	}
+
+	var totalDuration int64
+	for idx := range p.Videos.Count() {
+		totalDuration += p.Videos.Get(idx).DurationMs
+	}
+
+	return totalDuration
+}
+
 func (c *Core) GetVideoMeta(url string) (*VideoMeta, error) {
 	video, err := c.youtubeClient.GetVideo(url)
 	if err != nil {
