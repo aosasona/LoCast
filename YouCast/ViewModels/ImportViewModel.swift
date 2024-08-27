@@ -7,6 +7,8 @@
 import Foundation
 import SwiftUI
 
+let mobileYoutubeLinkRegex = /^(http(s):\/\/)?(youtu\.be\/[a-zA-Z0-9]{10,})(.*)$/
+
 enum LinkType {
     case video
     case playlist
@@ -131,6 +133,7 @@ class ImportViewModel: ObservableObject {
                     DispatchQueue.main.async { self?.linkMeta?.resolvedThumbnailImage = image }
                 }
                 
+                //TODO: remove
                 if let image = linkMeta?.resolvedThumbnailImage {
                     print("Color: \(image.averageColor ?? .clear)")
                 }
@@ -162,10 +165,13 @@ class ImportViewModel: ObservableObject {
     }
     
     // Figure out what sort of link we have, most times, we have both the `v` and `list` in the query, so we need to check the presence of the list query params first
-    // TODO: account for links like this: https://youtu.be/OPckpjBSAOw?si=k4GMS1RQws1f9j23
     func inferLinkType() -> LinkType {
         guard let videoURL else { return .none }
         
+        if videoURL.absoluteString.contains(mobileYoutubeLinkRegex) {
+            return .video
+        }
+
         if videoURL.getQueryParam("list") != nil {
             return .playlist
         } else if videoURL.getQueryParam("v") != nil {

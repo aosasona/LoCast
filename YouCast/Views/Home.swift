@@ -55,7 +55,8 @@ struct Home: View {
                     guard let copiedText = UIPasteboard.general.url else { return }
 
                     // Ensure it is a valid YouTube link
-                    if !copiedText.absoluteString.contains("youtube.com") {
+                    if !copiedText.absoluteString.contains("youtube.com") && !copiedText.absoluteString.contains("youtu.be") {
+                        print("Dismissing sheet: Not a valid YouTube link")
                         return
                     }
 

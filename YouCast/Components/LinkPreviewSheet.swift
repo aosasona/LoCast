@@ -17,8 +17,8 @@ struct LinkPreviewSheet: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(minWidth: 0, maxWidth: .infinity)
-                    .ignoresSafeArea(.all)
                     .blur(radius: 20)
+                    .ignoresSafeArea(.all)
             } else {
                 Color(.background)
                     .ignoresSafeArea(.all)
