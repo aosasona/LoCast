@@ -135,11 +135,12 @@ class ImportViewModel: ObservableObject {
             }
             
         } catch CoreError.presentable(let err) {
+            Logger.shared.error("Failed to load metadata: \(err)")
             setError(err)
             return
         } catch {
             setError("Failed to load metadata, something went wrong, please try again")
-            print("[loadMetadata] An error occurred: \(error.localizedDescription)")
+            Logger.shared.error("Failed to load metadata: \(error)")
             return
         }
     }

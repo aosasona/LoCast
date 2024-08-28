@@ -31,7 +31,7 @@ struct LinkPreviewSheet: View {
             }
             .ignoresSafeArea(.all)
 
-            VStack(alignment: .center) {
+            VStack(alignment: .center, spacing: 6) {
                 // FIXME: this is shitty
                 GeometryReader { geo in
                     ThumbnailImage()
@@ -57,7 +57,6 @@ struct LinkPreviewSheet: View {
                             .foregroundStyle(.light)
                     }
                     .padding(.horizontal)
-                    .padding(.bottom)
                 }
 
                 Text("\(viewModel.info?.title ?? "")")
@@ -66,15 +65,12 @@ struct LinkPreviewSheet: View {
                     .multilineTextAlignment(.center)
                     .lineLimit(3)
                     .padding(.horizontal)
-                    .padding(.bottom)
 
                 if viewModel.info?.isPlaylist == true {
                     Text("Playlist · \(viewModel.info?.itemCount ?? 0) items")
                         .font(.system(size: 13, weight: .medium))
                         .foregroundStyle(.white)
                         .padding(.horizontal)
-                        .padding(.vertical, 0)
-                        .padding(.bottom)
                 }
 
                 if let durationMs = viewModel.info?.durationMS {
@@ -82,7 +78,6 @@ struct LinkPreviewSheet: View {
                         .foregroundStyle(.white)
                         .font(.system(size: 13, weight: .light))
                         .padding(.horizontal)
-                        .padding(.vertical, 0)
                 }
             }
             .frame(maxHeight: .infinity)
@@ -123,6 +118,7 @@ struct LinkPreviewSheet: View {
                         }
                     }
                     .navigationTitle("Description")
+                    .navigationBarTitleDisplayMode(.inline)
                 }
             }
         }

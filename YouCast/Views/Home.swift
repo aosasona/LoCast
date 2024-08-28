@@ -58,7 +58,7 @@ struct Home: View {
 
                     // Ensure it is a valid YouTube link
                     if !copiedText.absoluteString.contains("youtube.com") && !copiedText.absoluteString.contains("youtu.be") {
-                        print("Dismissing sheet: Not a valid YouTube link")
+                        Logger.shared.info("Dismissing copied item: Not a valid YouTube link")
                         return
                     }
 
