@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA423CC92C80E57B00693914 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = EA423CC82C80E57B00693914 /* WhisperKit */; };
 		EADF229B2C7E6F6A0007B6CB /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = EADF229A2C7E6F6A0007B6CB /* SDWebImage */; };
 		EADF229E2C7E70030007B6CB /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = EADF229D2C7E70030007B6CB /* SDWebImageSwiftUI */; };
 /* End PBXBuildFile section */
@@ -41,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA423CC92C80E57B00693914 /* WhisperKit in Frameworks */,
 				EADF229E2C7E70030007B6CB /* SDWebImageSwiftUI in Frameworks */,
 				EADF229B2C7E6F6A0007B6CB /* SDWebImage in Frameworks */,
 			);
@@ -87,6 +89,7 @@
 			packageProductDependencies = (
 				EADF229A2C7E6F6A0007B6CB /* SDWebImage */,
 				EADF229D2C7E70030007B6CB /* SDWebImageSwiftUI */,
+				EA423CC82C80E57B00693914 /* WhisperKit */,
 			);
 			productName = YouCast;
 			productReference = EAB7F1B82C77CE3700820F58 /* YouCast.app */;
@@ -119,6 +122,7 @@
 			packageReferences = (
 				EADF22992C7E6F6A0007B6CB /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				EADF229C2C7E70030007B6CB /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				EA423CC72C80E57B00693914 /* XCRemoteSwiftPackageReference "WhisperKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EAB7F1B92C77CE3700820F58 /* Products */;
@@ -377,6 +381,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		EA423CC72C80E57B00693914 /* XCRemoteSwiftPackageReference "WhisperKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/argmaxinc/WhisperKit";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		EADF22992C7E6F6A0007B6CB /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
@@ -396,6 +408,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		EA423CC82C80E57B00693914 /* WhisperKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EA423CC72C80E57B00693914 /* XCRemoteSwiftPackageReference "WhisperKit" */;
+			productName = WhisperKit;
+		};
 		EADF229A2C7E6F6A0007B6CB /* SDWebImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = EADF22992C7E6F6A0007B6CB /* XCRemoteSwiftPackageReference "SDWebImage" */;
