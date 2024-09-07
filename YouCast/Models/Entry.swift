@@ -28,7 +28,7 @@ struct Failure: Codable {
 }
 
 @Model
-class Entry {
+class Entry: Equatable {
     var id: UUID = UUID()
     var videoId: String = ""
     @Attribute(.spotlight) var title: String = ""
@@ -43,14 +43,31 @@ class Entry {
     var lastModifiedAt: Date?
     var collection: Collection?
 
-    init(videoId: String, title: String, fileName: String, entryDescription: String, duration: TimeInterval, channelId: String, thumbnailUrl: URL? = nil) {
+    init(videoId: String, title: String, entryDescription: String, duration: TimeInterval, channelId: String?, thumbnailUrl: URL? = nil) {
         self.videoId = videoId
         self.title = title
-        self.fileName = fileName
         self.entryDescription = entryDescription
         self.duration = duration
-        self.channelId = channelId
         self.thumbnailUrl = thumbnailUrl
         self.createdAt = .now
+
+        if let channelId {
+            self.channelId = channelId
+        }
+    }
+
+    func setFileName(_ fileName: String) {
+        self.fileName = fileName
+    }
+
+    static func loadUnprocessedItems(db: Database) -> [Entry] {
+        let unprocessedItems: Result<[Entry], _> = db.findMany(
+            predicate: #Predicate { entry in
+                entry.processingState != .processed // Not processed at all
+                    && entry.processingState != .cancelled // Not cancelled by user
+                    && (entry.processingState == .failed && (entry?.failure?.count ?? 0) < 5) // Failed but has only failed less than 5 times
+            },
+            sortDescriptors: SortDescriptor<Entry>(\.createdAt)
+        )
     }
 }

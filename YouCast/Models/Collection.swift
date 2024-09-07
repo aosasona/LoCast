@@ -8,7 +8,7 @@ import Foundation
 import SwiftData
 
 @Model
-class Collection {
+class Collection: Equatable {
     var id: UUID = UUID()
     var name: String = ""
     var collectionDescription: String?
