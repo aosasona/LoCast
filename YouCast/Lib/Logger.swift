@@ -92,11 +92,10 @@ class Logger {
     
     func log(_ message: String, level: Level) {
         let log = Log.new(level: level, message: message)
-        
+        bufferedLogs.append(log)
+
         #if DEBUG
         print(log.toString())
-        #else
-        bufferedLogs.append(log)
         #endif
     }
     
