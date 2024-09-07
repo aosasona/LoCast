@@ -19,6 +19,7 @@ enum FailureReason: String, Codable {
     case invalidResource
     case unknown
     case tooManyRequests
+    case none
 }
 
 struct Failure: Codable {
@@ -38,7 +39,7 @@ class Entry: Equatable {
     var channelId: String = ""
     var thumbnailUrl: URL?
     var processingState: ProcessingState = ProcessingState.queued
-    var failure: Failure?
+    var failure: Failure = Failure(reason: .none, message: "", count: 0)
     var createdAt: Date = Date.now
     var lastModifiedAt: Date?
     var collection: Collection?
@@ -61,13 +62,20 @@ class Entry: Equatable {
     }
 
     static func loadUnprocessedItems(db: Database) -> [Entry] {
-        let unprocessedItems: Result<[Entry], _> = db.findMany(
-            predicate: #Predicate { entry in
-                entry.processingState != .processed // Not processed at all
-                    && entry.processingState != .cancelled // Not cancelled by user
-                    && (entry.processingState == .failed && (entry?.failure?.count ?? 0) < 5) // Failed but has only failed less than 5 times
-            },
+        let processed = ProcessingState.processed
+        let cancelled = ProcessingState.cancelled
+        let failed = ProcessingState.failed
+        let predicate = #Predicate<Entry> {
+            $0.processingState != processed
+                && $0.processingState != cancelled
+                && ($0.processingState == failed && $0.failure.count < 5) // Failed but has only failed less than 5 times
+        }
+
+        let _: Result<[Entry], Error> = db.findMany(
+            predicate: predicate,
             sortDescriptors: SortDescriptor<Entry>(\.createdAt)
         )
+
+        return []
     }
 }
