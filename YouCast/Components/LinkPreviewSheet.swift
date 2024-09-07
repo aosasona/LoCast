@@ -10,6 +10,9 @@ import SDWebImageSwiftUI
 import SwiftUI
 
 struct LinkPreviewSheet: View {
+    @EnvironmentObject var database: Database
+    @EnvironmentObject var entryQueue: Queue<Entry>
+
     @Environment(\.dismiss) var dismiss
     @ObservedObject var viewModel: ImportViewModel
     @State var showDescription: Bool = false
@@ -83,7 +86,7 @@ struct LinkPreviewSheet: View {
             .frame(maxHeight: .infinity)
             .safeAreaInset(edge: .bottom) {
                 VStack {
-                    Button(action: {}) {
+                    Button(action: self.addToLibrary) {
                         Label("Add to library", systemImage: "plus.circle")
                             .font(.system(size: 13, weight: .medium))
                             .foregroundStyle(.dark)
@@ -132,6 +135,18 @@ struct LinkPreviewSheet: View {
                 .ignoresSafeArea(.all)
                 .blur(radius: 18)
         }
+    }
+
+    private func addToLibrary() {
+        if viewModel.info?.isPlaylist == true {
+            viewModel.setError("Playlists are not supported yet")
+            return
+        }
+
+        guard let entry = viewModel.addVideoToLibrary(db: database) else { return }
+
+        entryQueue.enqueue(entry)
+        viewModel.resetImportStates()
     }
 
     func openDescription() {

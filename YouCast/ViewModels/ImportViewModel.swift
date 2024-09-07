@@ -5,6 +5,7 @@
 //  Created by Ayodeji Osasona on 24/08/2024.
 //
 import Foundation
+import SwiftData
 import SwiftUI
 
 let mobileYoutubeLinkRegex = /^(http(s):\/\/)?(youtu\.be\/[a-zA-Z0-9_-]{10,})(.*)$/
@@ -16,6 +17,7 @@ enum LinkType {
 }
 
 struct LinkInfo {
+    let id: String
     let title: String?
     let channelId: String?
     let author: String?
@@ -57,7 +59,22 @@ enum Meta {
             durationMS = video.durationMs
         }
         
-        return .init(title: title, channelId: channelId, author: author, description: description, thumbnail: thumbnail, durationMS: durationMS, itemCount: itemCount, isPlaylist: isPlaylist)
+        let id = switch self {
+        case .playlist(let p): p.id_
+        case .video(let v): v.id_
+        }
+        
+        return .init(
+            id: id,
+            title: title,
+            channelId: channelId,
+            author: author,
+            description: description,
+            thumbnail: thumbnail,
+            durationMS: durationMS,
+            itemCount: itemCount,
+            isPlaylist: isPlaylist
+        )
     }
 }
 
@@ -89,17 +106,45 @@ class ImportViewModel: ObservableObject {
         videoURL = url
     }
     
-    func importFromURL() {
-//        do {
-//            guard let url = videoURL else { return }
-//            guard let id = try getResourceID() else { throw CoreError.raw("Unable to extract a resource ID, please check the URL") }
-//        } catch let CoreError.raw(err) {
-//            setError(err)
-//            return
-//        } catch {
-//            setError("Failed to extract video ID, something went wrong, please try again")
-//            return
-//        }
+    func addVideoToLibrary(db: Database) -> Entry? {
+        guard let info else { return nil }
+        
+        var thumbnailURL: URL? = nil
+        if let sourceURLString = info.thumbnail?.sourceURL {
+            thumbnailURL = URL(string: sourceURLString)
+        }
+        
+        let id: String = info.id
+        let exists = db.exists(predicate: #Predicate<Entry> { $0.videoId == id })
+        switch exists {
+        case .success(let exists):
+            if exists {
+                setError("Video already exists in library")
+                return nil
+            }
+        case .failure(let err):
+            setError("Failed to check if video already exists in library, see logs for details")
+            Logger.shared.error("Failed to check if video exists: Error=\(err)")
+            return nil
+        }
+        
+        let entry = Entry(
+            videoId: info.id,
+            title: info.title ?? "Unknown",
+            entryDescription: info.description ?? "",
+            duration: TimeInterval(info.durationMS ?? 0),
+            channelId: info.channelId,
+            thumbnailUrl: thumbnailURL
+        )
+        
+        // TODO: check if video already exists
+        if case .failure(let err) = db.insert(entry) {
+            Logger.shared.error("Failed to add video to library: ID=\(entry.videoId), Error=\(err)")
+            setError("Failed to add video to library, see logs for details")
+            return nil
+        }
+        
+        return entry
     }
     
     func loadMetadata() {
@@ -178,10 +223,11 @@ class ImportViewModel: ObservableObject {
     func resetImportStates() {
         clearError()
         videoURL = nil
+        showPreview = false
         info = nil
     }
     
-    private func setError(_ error: String) {
+    func setError(_ error: String) {
         DispatchQueue.main.async { self.error = error }
     }
 

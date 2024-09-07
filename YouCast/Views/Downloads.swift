@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct Downloads: View {
     var body: some View {
