@@ -1,0 +1,35 @@
+{
+	"build": {
+		"production": {
+			"node": "20.11.1",
+			"channel": "production",
+			"autoIncrement": true,
+			"android": {},
+			"ios": {}
+		},
+		"development": {
+			"node": "20.11.1",
+			"developmentClient": true,
+			"distribution": "internal",
+			"env": {
+				"APP_ENVIRONMENT": "development"
+			}
+		},
+		"preview": {
+			"node": "20.11.1",
+			"extends": "production",
+			"channel": "preview",
+			"distribution": "internal",
+			"env": {
+				"APP_ENVIRONMENT": "preview"
+			}
+		}
+	},
+	"submit": {
+		"production": {}
+	},
+	"cli": {
+		"promptToConfigurePushNotifications": false,
+		"appVersionSource": "remote"
+	}
+}
