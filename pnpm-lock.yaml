@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@expo/vector-icons':
-        specifier: ^14.0.2
-        version: 14.0.2
+        specifier: ^14.0.3
+        version: 14.0.3
       '@react-navigation/native':
         specifier: ^6.0.2
         version: 6.1.18(react-native@0.74.5(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.2.79)(react@18.2.0))(react@18.2.0)
@@ -954,8 +954,8 @@ packages:
     resolution: {integrity: sha512-QdWi16+CHB9JYP7gma19OVVg0BFkvU8zNj9GjWorYI8Iv8FUxjOCcYRuAmX4s/h91e4e7BPsskc8cSrZYho9Ew==}
     engines: {node: '>=12'}
 
-  '@expo/vector-icons@14.0.2':
-    resolution: {integrity: sha512-70LpmXQu4xa8cMxjp1fydgRPsalefnHaXLzIwaHMEzcZhnyjw2acZz8azRrZOslPVAWlxItOa2Dd7WtD/kI+CA==}
+  '@expo/vector-icons@14.0.3':
+    resolution: {integrity: sha512-UJAKOXPPi6ez/1QZfoFVopCH3+c12Sw+T+IIVkvONCEN7zjN1fLxxWHkZ7Spz4WO5EH2ObtaJfCe/k4rw+ftxA==}
 
   '@expo/xcpretty@4.3.1':
     resolution: {integrity: sha512-sqXgo1SCv+j4VtYEwl/bukuOIBrVgx6euIoCat3Iyx5oeoXwEA2USCoeL0IPubflMxncA2INkqJ/Wr3NGrSgzw==}
@@ -6280,7 +6280,7 @@ snapshots:
     dependencies:
       cross-spawn: 7.0.3
 
-  '@expo/vector-icons@14.0.2':
+  '@expo/vector-icons@14.0.3':
     dependencies:
       prop-types: 15.8.1
 
@@ -8196,7 +8196,7 @@ snapshots:
       '@expo/config': 9.0.3
       '@expo/config-plugins': 8.0.8
       '@expo/metro-config': 0.18.11
-      '@expo/vector-icons': 14.0.2
+      '@expo/vector-icons': 14.0.3
       babel-preset-expo: 11.0.14(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))
       expo-asset: 10.0.10(expo@51.0.32(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2)))
       expo-file-system: 17.0.1(expo@51.0.32(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2)))
