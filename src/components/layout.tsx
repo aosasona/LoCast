@@ -1,18 +1,23 @@
 import type { PropsWithChildren } from "react";
+import { Fragment } from "react";
 import logo from "@images/light-logo.svg";
 import PWABadge from "$/PWABadge";
 
 type Props = PropsWithChildren<{}>;
 
+// TODO: make this toggle-able for mobile
 export default function Layout({ children }: Props) {
 	return (
-		<main className="bg-dark">
-			<nav className="px-4 py-2">
-				<img src={logo} alt="YouCast Logo" className="w-8 aspect-square" />
-			</nav>
-			<hr className="border-neutral-800" />
-			{children}
+		<Fragment>
+			<main className="flex w-screen h-screen gap-x-3">
+				<nav className="h-full border-r border-r-neutral-800 px-3 py-4 select-none">
+					<img src={logo} alt="YouCast Logo" className="w-8 aspect-square" />
+				</nav>
+
+				{children}
+			</main>
+
 			<PWABadge />
-		</main>
+		</Fragment>
 	);
 }

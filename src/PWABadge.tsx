@@ -28,19 +28,19 @@ function PWABadge() {
 	}
 
 	return (
-		<div className="fixed bottom-2 right-2" role="alert" aria-labelledby="toast-message">
-			{!(offlineReady || needRefresh) && (
-				<div className="PWABadge-toast">
-					<div className="PWABadge-message">
+		<div className="fixed bottom-4 right-4 border border-neutral-800 rounded-lg transition-all" role="alert" aria-labelledby="toast-message">
+			{(offlineReady || needRefresh) && (
+				<div className="p-3">
+					<div className="text-sm">
 						{offlineReady ? <span id="toast-message">App ready to work offline</span> : <span id="toast-message">New content available, click on reload button to update.</span>}
 					</div>
-					<div className="PWABadge-buttons">
+					<div className="mt-2 flex justify-end">
 						{needRefresh && (
-							<button className="primary-btn" onClick={() => updateServiceWorker(true)}>
+							<button className="primary-btn btn-sm" onClick={() => updateServiceWorker(true)}>
 								Reload
 							</button>
 						)}
-						<button className="primary-btn" onClick={() => close()}>
+						<button className="primary-btn btn-sm" onClick={() => close()}>
 							Close
 						</button>
 					</div>
