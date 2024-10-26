@@ -6,6 +6,12 @@ import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+	optimizeDeps: {
+		exclude: ["@electric-sql/pglite"],
+	},
+	worker: {
+		format: "es",
+	},
 	plugins: [
 		react(),
 		TanStackRouterVite(),
@@ -20,8 +26,8 @@ export default defineConfig({
 			// },
 
 			manifest: {
-				name: "YouCast",
-				short_name: "YouCast",
+				name: "LoCast",
+				short_name: "LoCast",
 				description: "Listen to YouTube videos on the go!",
 				theme_color: "#121212",
 				icons: [
@@ -70,6 +76,7 @@ export default defineConfig({
 			$: path.resolve(__dirname, "src"),
 			"@ui": path.resolve(__dirname, "src/components"),
 			"@lib": path.resolve(__dirname, "src/lib"),
+			"@stores": path.resolve(__dirname, "src/stores"),
 			"@assets": path.resolve(__dirname, "src/assets"),
 			"@images": path.resolve(__dirname, "src/assets/images"),
 		},

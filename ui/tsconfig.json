@@ -32,6 +32,9 @@
       "@lib/*": [
         "./src/lib/*"
       ],
+      "@stores/*": [
+        "./src/stores/*"
+      ],
       "@assets/*": [
         "./src/assets/*"
       ],
