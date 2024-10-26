@@ -13,30 +13,12 @@
 	line-height: 1.5;
 	font-weight: 400;
 
-	color-scheme: dark;
-	color: hsl(var(--color-body));
-	background-color: hsl(var(--color-dark));
+	/* color-scheme: dark; */
+	/* color: hsl(var(--color-body)); */
+	/* background-color: hsl(var(--color-dark)); */
 
 	/* font-synthesis: none; */
 	/* text-rendering: optimizeLegibility; */
 	/* -webkit-font-smoothing: antialiased; */
 	/* -moz-osx-font-smoothing: grayscale; */
-}
-
-@layer components {
-	.primary-btn {
-		@apply bg-primary-400 text-dark text-sm px-3 py-1.5 rounded-md ring-1 ring-primary-500 transition-all;
-
-		&.btn-sm {
-			@apply px-2.5 py-1;
-		}
-
-		&:focus {
-			@apply outline-none ring-2 ring-primary-200;
-		}
-
-		&:hover {
-			@apply bg-primary-500 ring-primary-600;
-		}
-	}
 }
