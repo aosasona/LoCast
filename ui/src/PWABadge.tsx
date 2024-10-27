@@ -1,3 +1,4 @@
+import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import { useRegisterSW } from "virtual:pwa-register/react";
 
 function PWABadge() {
@@ -28,25 +29,25 @@ function PWABadge() {
 	}
 
 	return (
-		<div className="fixed bottom-4 right-4 border border-neutral-800 rounded-lg transition-all" role="alert" aria-labelledby="toast-message">
+		<Box className="fixed bottom-5 right-5 border border-gray rounded-lg transition-all" role="alert" aria-labelledby="toast-message">
 			{(offlineReady || needRefresh) && (
-				<div className="p-3">
-					<div className="text-sm">
+				<Box p="2">
+					<Text size="2">
 						{offlineReady ? <span id="toast-message">App ready to work offline</span> : <span id="toast-message">New content available, click on reload button to update.</span>}
-					</div>
-					<div className="mt-2 flex justify-end">
-						{needRefresh && (
-							<button className="primary-btn btn-sm" onClick={() => updateServiceWorker(true)}>
-								Reload
-							</button>
-						)}
-						<button className="primary-btn btn-sm" onClick={() => close()}>
+					</Text>
+					<Flex justify="end" mt="2" gap="2">
+						<Button size="1" variant="soft" color="gray" onClick={() => close()}>
 							Close
-						</button>
-					</div>
-				</div>
+						</Button>
+						{needRefresh && (
+							<Button size="1" onClick={() => updateServiceWorker(true)}>
+								Reload
+							</Button>
+						)}
+					</Flex>
+				</Box>
 			)}
-		</div>
+		</Box>
 	);
 }
 
