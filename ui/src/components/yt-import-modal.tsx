@@ -4,6 +4,7 @@ import * as Form from "@radix-ui/react-form";
 import { useForm } from "react-hook-form";
 import { useHotkeys } from "react-hotkeys-hook";
 import YouTubeSource from "$/lib/sources/youtube";
+import { presentError } from "$/lib/error";
 
 type Props = {
 	open: boolean;
@@ -16,14 +17,30 @@ export default function YTImportModal(props: Props) {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = useForm();
 
 	useHotkeys(["meta+i", "ctrl+i"], props.onOpen);
 
-	async function handleForm(data: Record<string, string>) {}
+	async function handleForm(data: Record<string, string>) {
+		try {
+			console.log(data);
+			const id = YouTubeSource.extractIdentifier(data.url);
+			const yt = await YouTubeSource.new();
+			const info = await yt.getInfo(id);
+			console.log(info);
+		} catch (error) {
+			presentError(error);
+		}
+	}
+
+	function onClose() {
+		reset();
+		props.onClose();
+	}
 
 	return (
-		<Dialog.Root open={props.open} onOpenChange={props.onClose}>
+		<Dialog.Root open={props.open} onOpenChange={onClose}>
 			<Dialog.Content maxWidth="450px">
 				<Form.Root onSubmit={handleSubmit(handleForm)}>
 					<Dialog.Title>Import from YouTube</Dialog.Title>
@@ -33,7 +50,7 @@ export default function YTImportModal(props: Props) {
 						</Text>
 					</Dialog.Description>
 
-					<Box my="4">
+					<Box mt="4" mb="6">
 						<Form.Field name="url">
 							<Form.Label>
 								<Text size="2" color="gray">

@@ -21,7 +21,7 @@ export default function Layout({ children }: Props) {
 	return (
 		<Fragment>
 			<Flex>
-				<Flex direction="column" width={{ xs: "0px", sm: "60px", lg: "min(20%, 250px)" }} px="2" py="3" className="border-r border-r-gray h-screen">
+				<Flex direction="column" width={{ xs: "0px", sm: "min(20%, 250px)" }} px="2" py="3" className="border-r border-r-gray h-screen">
 					<Flex direction="column" gap="4" align={{ sm: "center", lg: "start" }} justify="center" px="2">
 						<Box className="w-max aspect-square">
 							<img src={lightLogo} alt="LoCast Logo" className="w-8 aspect-square hidden dark:block" />

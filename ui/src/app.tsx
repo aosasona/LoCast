@@ -6,6 +6,7 @@ import database from "@lib/database";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
+import { Toaster } from "sonner";
 
 // Create a new router instance
 const router = createRouter({ routeTree });
@@ -23,8 +24,9 @@ export default function App() {
 	return (
 		<StrictMode>
 			<PGliteProvider db={database}>
-				<Theme accentColor="lime" appearance="dark" radius="medium">
+				<Theme accentColor="lime" appearance="dark" radius="medium" grayColor="gray">
 					<RouterProvider router={router} />
+					<Toaster />
 				</Theme>
 			</PGliteProvider>
 		</StrictMode>
