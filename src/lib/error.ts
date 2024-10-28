@@ -1,5 +1,11 @@
 import { toast } from "sonner";
-import { YouTubeError } from "./sources/youtube";
+
+export class YouTubeError extends Error {
+	constructor(message: string) {
+		super(message);
+		this.name = "YouTubeError";
+	}
+}
 
 const PRESENTABLE_ERRORS = [YouTubeError];
 export function presentError(error: unknown | Error): void {

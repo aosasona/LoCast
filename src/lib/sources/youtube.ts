@@ -1,9 +1,5 @@
-export class YouTubeError extends Error {
-	constructor(message: string) {
-		super(message);
-		this.name = "SourceError";
-	}
-}
+import { commands, VideoDetails } from "../bindings";
+import { presentError, YouTubeError } from "../error";
 
 // TODO: create a generic source class that all sources will extend in the future
 class YouTubeSource {
@@ -19,7 +15,7 @@ class YouTubeSource {
 	public static LINK_PATTERN =
 		/^(http(s)?:\/\/)?((((www|m|music)\.)?youtube\.com\/(watch\?(.*?)v=([a-zA-Z0-9_-]{10,})|playlist\?list=([a-zA-Z0-9_-]+)))|(youtu\.be\/([a-zA-Z0-9_-]{10,})))/;
 
-	private constructor() {}
+	private constructor() { }
 
 	public static new() {
 		return new YouTubeSource();
@@ -45,7 +41,24 @@ class YouTubeSource {
 			throw new YouTubeError("Invalid YouTube URL");
 		}
 
+		console.trace(`[YouTubeSource] extractIdentifier`, id);
 		return id;
+	}
+
+	public static async loadVideoInfo(url: string): Promise<VideoDetails | null> {
+		try {
+			const id = YouTubeSource.extractIdentifier(url);
+			const result = await commands.getVideoInfo(id);
+			console.trace(`[YTImportModal] loadVideoInfo`, result);
+
+			if (result.status == "error") throw new YouTubeError(result.error);
+			if (!result.data) throw new YouTubeError("No data returned");
+
+			return result.data;
+		} catch (error) {
+			presentError(error);
+			return null;
+		}
 	}
 }
 

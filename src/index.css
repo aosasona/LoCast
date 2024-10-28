@@ -25,6 +25,10 @@
 	/* -moz-osx-font-smoothing: grayscale; */
 }
 
+/* *{ */
+/* 	@apply border border-red-600; */
+/* } */
+
 body {
 	@apply select-none;
 }

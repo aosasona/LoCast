@@ -19,9 +19,11 @@
 		A5423C994E24E1CCBAF295A0 /* libapp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B8DB3FDB97DB15BC733A1CB /* libapp.a */; };
 		B68C47965DBA40A0CB9BFD67 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 60323D8BE125FBE4C36DAE8E /* Metal.framework */; };
 		D2A1EADF38CF18F46D407811 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D8324B8434AEC5617D89E0B /* Security.framework */; };
+		EC0F6E3767A56A1FE429A185 /* libapp.a in Resources */ = {isa = PBXBuildFile; fileRef = 2412BA55448D2792C4D5B452 /* libapp.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2412BA55448D2792C4D5B452 /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
 		24F06CCE388F1DA725E7FF12 /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
 		29ADB414587DD6221331BC8F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2B8DB3FDB97DB15BC733A1CB /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
@@ -30,6 +32,7 @@
 		48DBC7F76F7CCA06593C7A9C /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		590BE954C218F481AFDE8312 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		60323D8BE125FBE4C36DAE8E /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		70CFA073B6EFBC2C2ADF5829 /* youtube.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = youtube.rs; sourceTree = "<group>"; };
 		7547BAA9E0C4604CF7A13AB7 /* locast_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = locast_iOS.entitlements; sourceTree = "<group>"; };
 		95AE21B19F1317F40F435535 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9B579A33E804FAD73EB1FD88 /* lib.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = lib.rs; sourceTree = "<group>"; };
@@ -39,6 +42,7 @@
 		C3C54FB29CDEDBDA44F1F589 /* locast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = locast.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6FA0A246C0686043E57313B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E8D6EFFB22E025EF43BD8FC1 /* main.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.rs; sourceTree = "<group>"; };
+		EB1B31714A66A849B2238C34 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
 		F276BF59CE5B8783748AD1D8 /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -125,6 +129,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		BF95EEAF0B3D40DABB2C8A55 /* debug */ = {
+			isa = PBXGroup;
+			children = (
+				2412BA55448D2792C4D5B452 /* libapp.a */,
+			);
+			path = debug;
+			sourceTree = "<group>";
+		};
+		C00A5F7AA2475CFAB39B8F1F /* sources */ = {
+			isa = PBXGroup;
+			children = (
+				EB1B31714A66A849B2238C34 /* mod.rs */,
+				70CFA073B6EFBC2C2ADF5829 /* youtube.rs */,
+			);
+			path = sources;
+			sourceTree = "<group>";
+		};
 		C8C87BE949B1C93480DB142B /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -138,6 +159,7 @@
 			children = (
 				9B579A33E804FAD73EB1FD88 /* lib.rs */,
 				E8D6EFFB22E025EF43BD8FC1 /* main.rs */,
+				C00A5F7AA2475CFAB39B8F1F /* sources */,
 			);
 			name = src;
 			path = ../../src;
@@ -146,8 +168,17 @@
 		DB07B97DDDA2A114C84972B0 /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				EFEE29DF29D261D5E4EA1497 /* arm64 */,
 			);
 			path = Externals;
+			sourceTree = "<group>";
+		};
+		EFEE29DF29D261D5E4EA1497 /* arm64 */ = {
+			isa = PBXGroup;
+			children = (
+				BF95EEAF0B3D40DABB2C8A55 /* debug */,
+			);
+			path = arm64;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -205,6 +236,7 @@
 				57F7E1F0D887691885DDD0BA /* Assets.xcassets in Resources */,
 				506C6ADD9F1BBF369EBFC2A4 /* LaunchScreen.storyboard in Resources */,
 				02D9FB60E47E63CFEE6AE032 /* assets in Resources */,
+				EC0F6E3767A56A1FE429A185 /* libapp.a in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,6 +299,8 @@
 					"\".\"",
 				);
 				INFOPLIST_FILE = locast_iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = LoCast;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -439,6 +473,8 @@
 					"\".\"",
 				);
 				INFOPLIST_FILE = locast_iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = LoCast;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

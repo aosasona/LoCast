@@ -52,7 +52,7 @@ pub async fn get_video_info(id: &str) -> Result<VideoDetails, String> {
         .await
         .map_err(|e| {
             log::error!("error while fetching video info: {}", e);
-            String::from("Failed to fetch video info")
+            e.to_string()
         })?
         .video_details;
 
