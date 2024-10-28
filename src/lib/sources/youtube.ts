@@ -26,16 +26,26 @@ class YouTubeSource {
 	}
 
 	public static extractIdentifier(url: string): string {
+		url = url.trim();
+
 		if (!YouTubeSource.LINK_PATTERN.test(url)) {
 			throw new YouTubeError("Invalid YouTube URL");
 		}
 
 		const matches = YouTubeSource.LINK_PATTERN.exec(url);
-		if (!matches) {
+		if (matches == null || !matches.length) {
 			throw new YouTubeError("Invalid YouTube URL");
 		}
 
-		return matches[matches.length - 1];
+		// Remove empty matches
+		const filteredMatches = matches.filter((match) => match !== undefined && match !== null && match !== "");
+
+		const id = String(filteredMatches[filteredMatches.length - 1]);
+		if (!id) {
+			throw new YouTubeError("Invalid YouTube URL");
+		}
+
+		return id;
 	}
 }
 

@@ -1,6 +1,8 @@
 import { Box, Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import * as Form from "@radix-ui/react-form";
 
+import { commands } from "@lib/bindings";
+
 import { useForm } from "react-hook-form";
 import { useHotkeys } from "react-hotkeys-hook";
 import YouTubeSource from "$/lib/sources/youtube";
@@ -24,8 +26,12 @@ export default function YTImportModal(props: Props) {
 
 	async function handleForm(data: Record<string, string>) {
 		try {
-			console.log(data);
 			const id = YouTubeSource.extractIdentifier(data.url);
+
+			const result = await commands.getVideoInfo(id);
+			console.trace(`[YTImportModal] getVideoInfo`, result);
+
+			// TODO: use tanstack query
 		} catch (error) {
 			presentError(error);
 		}
@@ -76,9 +82,7 @@ export default function YTImportModal(props: Props) {
 								Cancel
 							</Button>
 						</Dialog.Close>
-						<Button type="submit" form="yt-import-form">
-							Continue
-						</Button>
+						<Button type="submit">Continue</Button>
 					</Flex>
 				</Form.Root>
 			</Dialog.Content>
