@@ -1,21 +1,9 @@
 import { Window } from "@tauri-apps/api/window";
 import type { PropsWithChildren } from "react";
 import { Fragment, useEffect, useState } from "react";
-import {
-	Box,
-	Button,
-	DropdownMenu,
-	Flex,
-	IconButton,
-	Tooltip,
-} from "@radix-ui/themes";
+import { Box, Button, DropdownMenu, Flex, IconButton, Tooltip } from "@radix-ui/themes";
 
-import {
-	CaretRight,
-	CaretLeft,
-	SidebarSimple,
-	Plus,
-} from "@phosphor-icons/react";
+import { CaretRight, CaretLeft, SidebarSimple, Plus } from "@phosphor-icons/react";
 
 import { useRouter } from "@tanstack/react-router";
 import YTImportModal from "./yt-import";
@@ -40,18 +28,34 @@ export default function Layout({ children }: Props) {
 			capture: true,
 		});
 
-		document.addEventListener("selectstart", (e) => e.preventDefault(), {
-			capture: true,
-		});
+		document.addEventListener(
+			"selectstart",
+			(e) => {
+				// Ensure the target is not an input field
+				if (e.target instanceof HTMLInputElement) return;
+				e.preventDefault();
+			},
+			{
+				capture: true,
+			}
+		);
 
 		return () => {
 			document.removeEventListener("contextmenu", (e) => e.preventDefault(), {
 				capture: true,
 			});
 
-			document.removeEventListener("selectstart", (e) => e.preventDefault(), {
-				capture: true,
-			});
+			document.removeEventListener(
+				"selectstart",
+				(e) => {
+					// Ensure the target is not an input field
+					if (e.target instanceof HTMLInputElement) return;
+					e.preventDefault();
+				},
+				{
+					capture: true,
+				}
+			);
 		};
 	}, []);
 
@@ -87,10 +91,7 @@ export default function Layout({ children }: Props) {
 	return (
 		// TODO: add mobile layout
 		<Fragment>
-			<div
-				className="w-screen h-8 fixed top-0 left-0 right-0 z-[999999999]"
-				data-tauri-drag-region
-			/>
+			<div className="w-screen h-8 fixed top-0 left-0 right-0 z-[999999999]" data-tauri-drag-region />
 
 			<Flex overflow="hidden">
 				<Flex
@@ -99,40 +100,16 @@ export default function Layout({ children }: Props) {
 					px="2"
 					py="3"
 					pt={{ md: isMaximized ? "2" : "6" }}
-					className="border-r border-r-gray h-screen transition-all"
-				>
-					<Flex
-						direction="column"
-						gap="4"
-						align={collapseSidebar ? "center" : "start"}
-						justify="center"
-						px="2"
-					>
-						<Flex
-							align="center"
-							justify={collapseSidebar ? "center" : "between"}
-							gap="1"
-							width="100%"
-							mb="2"
-						>
-							<Tooltip
-								content={`${collapseSidebar ? "Expand" : "Collapse"} sidebar ⌘ s`}
-							>
-								<IconButton
-									variant="ghost"
-									size="2"
-									onClick={() => setCollapseSidebar(!collapseSidebar)}
-								>
+					className="border-r border-r-gray h-screen transition-all">
+					<Flex direction="column" gap="4" align={collapseSidebar ? "center" : "start"} justify="center" px="2">
+						<Flex align="center" justify={collapseSidebar ? "center" : "between"} gap="1" width="100%" mb="2">
+							<Tooltip content={`${collapseSidebar ? "Expand" : "Collapse"} sidebar ⌘ s`}>
+								<IconButton variant="ghost" size="2" onClick={() => setCollapseSidebar(!collapseSidebar)}>
 									<SidebarSimple size={20} />
 								</IconButton>
 							</Tooltip>
 
-							<Flex
-								gap="2"
-								display={collapseSidebar ? "none" : "flex"}
-								hidden={collapseSidebar}
-								className="transition-all"
-							>
+							<Flex gap="2" display={collapseSidebar ? "none" : "flex"} hidden={collapseSidebar} className="transition-all">
 								<Tooltip content="Go back ⌘ ←">
 									<IconButton size="1" variant="surface" onClick={goBack}>
 										<CaretLeft size={12} />
@@ -164,10 +141,7 @@ export default function Layout({ children }: Props) {
 								</DropdownMenu.Trigger>
 							</Show>
 							<DropdownMenu.Content>
-								<DropdownMenu.Item
-									shortcut="⌘ i"
-									onClick={() => setOpenYtImportModal(true)}
-								>
+								<DropdownMenu.Item shortcut="⌘ i" onClick={() => setOpenYtImportModal(true)}>
 									YouTube
 								</DropdownMenu.Item>
 							</DropdownMenu.Content>
@@ -179,11 +153,7 @@ export default function Layout({ children }: Props) {
 					{children}
 				</Box>
 			</Flex>
-			<YTImportModal
-				open={openYTImportModal}
-				onClose={() => setOpenYtImportModal(false)}
-				onOpen={() => setOpenYtImportModal(true)}
-			/>
+			<YTImportModal open={openYTImportModal} onClose={() => setOpenYtImportModal(false)} onOpen={() => setOpenYtImportModal(true)} />
 		</Fragment>
 	);
 }
