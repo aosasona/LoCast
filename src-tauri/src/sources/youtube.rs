@@ -11,7 +11,7 @@ pub struct Thumbnail {
 
 // We will only store the small and standard thumbnails for now (previews and actual display)
 #[derive(Debug, Serialize, Deserialize, Type)]
-pub struct Thumbnails {
+pub struct ThumbnailSet {
     pub small: Thumbnail,
     pub medium: Thumbnail,
     pub standard: Thumbnail,
@@ -21,7 +21,7 @@ pub struct Thumbnails {
 pub struct Author {
     pub id: String,
     pub name: String,
-    pub thumbnails: Option<Thumbnails>,
+    pub thumbnails: Option<ThumbnailSet>,
     pub url: String,
 }
 
@@ -30,7 +30,7 @@ pub struct VideoDetails {
     pub id: String,
     pub title: String,
     pub description: String,
-    pub thumbnails: Option<Thumbnails>,
+    pub thumbnails: Option<ThumbnailSet>,
     pub url: String,
     pub category: String,
     pub duration_in_seconds: String,
@@ -81,7 +81,7 @@ pub async fn get_video_info(id: &str) -> Result<VideoDetails, String> {
 }
 
 // Extract the small, medium, and standard thumbnails from the list of thumbnails
-fn extract_thumbnails(thumbnails: &mut [rusty_ytdl::Thumbnail]) -> Option<Thumbnails> {
+fn extract_thumbnails(thumbnails: &mut [rusty_ytdl::Thumbnail]) -> Option<ThumbnailSet> {
     if thumbnails.is_empty() {
         return None;
     }
@@ -97,7 +97,7 @@ fn extract_thumbnails(thumbnails: &mut [rusty_ytdl::Thumbnail]) -> Option<Thumbn
         medium = thumbnails.get(mid).unwrap().clone();
     }
 
-    Some(Thumbnails {
+    Some(ThumbnailSet {
         small: Thumbnail {
             url: small.url.clone(),
             width: small.width as i32,
