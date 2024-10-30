@@ -35,9 +35,7 @@ export default function Layout({ children }: Props) {
 				if (e.target instanceof HTMLInputElement) return;
 				e.preventDefault();
 			},
-			{
-				capture: true,
-			}
+			{ capture: true }
 		);
 
 		return () => {
@@ -52,9 +50,7 @@ export default function Layout({ children }: Props) {
 					if (e.target instanceof HTMLInputElement) return;
 					e.preventDefault();
 				},
-				{
-					capture: true,
-				}
+				{ capture: true }
 			);
 		};
 	}, []);
@@ -63,8 +59,8 @@ export default function Layout({ children }: Props) {
 	useEffect(() => {
 		const unlisten = (async () => {
 			const unlisten = await appWindow.onResized(async (_) => {
-				const isMaximized = await appWindow.isMaximized();
-				setIsMaximized(isMaximized);
+				const isFullscreen = await appWindow.isFullscreen();
+				setIsMaximized(isFullscreen);
 			});
 
 			return unlisten;
