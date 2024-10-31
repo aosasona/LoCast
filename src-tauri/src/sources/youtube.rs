@@ -1,6 +1,9 @@
 use rusty_ytdl::Video;
 use serde::{Deserialize, Serialize};
 use specta::Type;
+use tauri::State;
+
+use crate::{cache::Key, types::AppState};
 
 #[derive(Debug, Serialize, Deserialize, Type)]
 pub struct Thumbnail {
@@ -41,11 +44,20 @@ pub struct VideoDetails {
 
 #[tauri::command]
 #[specta::specta]
-pub async fn get_video_info(id: &str) -> Result<VideoDetails, String> {
+pub async fn get_video_info(id: &str, state: State<'_, AppState>) -> Result<VideoDetails, String> {
     let video = Video::new(id).map_err(|e| {
         log::error!("error while fetching video: {}", e);
         String::from("Failed to fetch video")
     })?;
+
+    if let Some(info) = state
+        .cache
+        .get::<VideoDetails>(Key::YoutubeVideoInfo(id.to_string()))
+        .await
+    {
+        log::info!("cache hit for video {}", id);
+        return Ok(info.value);
+    }
 
     let mut info = video
         .get_basic_info()
@@ -65,6 +77,13 @@ pub async fn get_video_info(id: &str) -> Result<VideoDetails, String> {
             url: au.channel_url,
         });
     }
+
+    tokio::spawn(async move {
+        let _ = state
+            .cache
+            .set(Key::YoutubeVideoInfo(id.to_string()), info.clone())
+            .await;
+    });
 
     Ok(VideoDetails {
         id: info.video_id,
