@@ -1,8 +1,10 @@
 use std::sync::Arc;
 
+use cache::DbCache;
 use specta_typescript::Typescript;
 use tauri_specta::{collect_commands, Builder};
 
+mod cache;
 mod database;
 mod jobs;
 mod sources;
@@ -17,11 +19,14 @@ async fn setup<T: tauri::Runtime>(manager: &impl tauri::Manager<T>) {
         }
     };
 
-    let job_manager = Arc::new(jobs::JobManager::new(db_pool.clone()));
+    let arc_pool = Arc::new(db_pool);
+
+    let job_manager = Arc::new(jobs::JobManager::new(arc_pool.clone()));
 
     manager.manage(types::AppState {
         job_manager: Arc::clone(&job_manager),
-        db_pool,
+        cache: DbCache::new(Arc::clone(&arc_pool)),
+        db_pool: Arc::clone(&arc_pool),
     });
 
     job_manager.start().await;

@@ -1,14 +1,15 @@
 use serde::{de::DeserializeOwned, Serialize};
 use sqlx::{Pool, Sqlite};
+use std::sync::Arc;
 
 use super::Job;
 
 pub struct JobManager {
-    db_pool: Pool<Sqlite>,
+    db_pool: Arc<Pool<Sqlite>>,
 }
 
 impl JobManager {
-    pub fn new(db_pool: Pool<Sqlite>) -> Self {
+    pub fn new(db_pool: Arc<Pool<Sqlite>>) -> Self {
         Self { db_pool }
     }
 
