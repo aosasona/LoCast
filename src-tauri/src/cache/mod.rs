@@ -1,9 +1,31 @@
 use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use sqlx::{Pool, Sqlite, Type};
-use std::sync::Arc;
+use std::{fmt::Display, sync::Arc};
 
 pub struct DbCache {
     pool: Arc<Pool<Sqlite>>,
+}
+
+#[derive(Clone)]
+pub enum Key {
+    YoutubeVideoInfo(String),
+}
+
+impl From<String> for Key {
+    fn from(s: String) -> Self {
+        match s.split_once('_') {
+            Some(("ytvi", id)) => Key::YoutubeVideoInfo(id.to_string()),
+            _ => unreachable!("invalid cache key"),
+        }
+    }
+}
+
+impl Display for Key {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Key::YoutubeVideoInfo(id) => write!(f, "ytvi_{}", id),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Type)]
@@ -21,7 +43,7 @@ impl From<i64> for Version {
 }
 
 pub struct CacheEntry<T> {
-    pub key: String,
+    pub key: Key,
     pub value: T,
     pub version: Version,
 }
@@ -34,13 +56,14 @@ impl DbCache {
     // Get the cache entry for the given key and version if it exists
     pub async fn get_with_version<T: DeserializeOwned>(
         &self,
-        key: &str,
+        key: Key,
         version: Version,
     ) -> Option<CacheEntry<T>> {
         let mut conn = self.pool.acquire().await.ok()?;
 
+        let key = key.to_string();
         let row = sqlx::query!(
-            r#"SELECT value FROM cache WHERE key = ?1 AND version = ?2"#,
+            r#"SELECT key, value FROM cache WHERE key = ?1 AND version = ?2"#,
             key,
             version
         )
@@ -51,18 +74,19 @@ impl DbCache {
         let value = serde_json::from_str(&row.value).ok()?;
 
         Some(CacheEntry {
-            key: key.into(),
+            key: row.key.into(),
             value,
             version,
         })
     }
 
     // Get the latest version of the cache entry for the given key if it exists
-    pub async fn get<T: DeserializeOwned>(&self, key: &str) -> Option<CacheEntry<T>> {
+    pub async fn get<T: DeserializeOwned>(&self, key: Key) -> Option<CacheEntry<T>> {
         let mut conn = self.pool.acquire().await.ok()?;
 
+        let key = key.to_string();
         let row = sqlx::query!(
-            r#"SELECT value, version FROM cache WHERE key = ?1 ORDER BY version DESC LIMIT 1"#,
+            r#"SELECT key, value, version FROM cache WHERE key = ?1 ORDER BY version DESC LIMIT 1"#,
             key
         )
         .fetch_one(&mut *conn)
@@ -72,15 +96,16 @@ impl DbCache {
         let value = serde_json::from_str(&row.value).ok()?;
 
         Some(CacheEntry {
-            key: key.into(),
+            key: row.key.into(),
             value,
             version: Version::from(row.version),
         })
     }
 
     // Set the cache entry, incrementing the version number if the key already exists
-    pub async fn set<T: Serialize>(&self, key: &str, value: &T) -> anyhow::Result<Version> {
+    pub async fn set<T: Serialize>(&self, key: Key, value: &T) -> anyhow::Result<Version> {
         let mut conn = self.pool.acquire().await?;
+        let key = key.to_string();
         let value = serde_json::to_string(value)?;
 
         let last_version = sqlx::query!(
