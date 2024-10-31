@@ -68,5 +68,21 @@ pub(crate) fn get_migrations() -> Vec<Migration> {
         ",
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 4,
+            description: "create_cache_table",
+            sql: "
+        CREATE TABLE `cache` (
+            key TEXT PRIMARY KEY,
+            value TEXT NOT NULL,
+            version INTEGER NOT NULL DEFAULT 1,
+            created_at INTEGER NOT NULL DEFAULT (unixepoch()),
+            last_updated INTEGER NOT NULL DEFAULT (unixepoch()),
+            UNIQUE(key, version),
+            CHECK (version > 0)
+        ) STRICT;
+        ",
+            kind: MigrationKind::Up,
+        }
     ]
 }
