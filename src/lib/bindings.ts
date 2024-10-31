@@ -25,10 +25,10 @@ async getVideoInfo(id: string) : Promise<Result<VideoDetails, string>> {
 
 /** user-defined types **/
 
-export type Author = { id: string; name: string; thumbnails: Thumbnails | null; url: string }
+export type Author = { id: string; name: string; thumbnails: ThumbnailSet | null; url: string }
 export type Thumbnail = { url: string; width: number; height: number }
-export type Thumbnails = { small: Thumbnail; medium: Thumbnail; standard: Thumbnail }
-export type VideoDetails = { id: string; title: string; description: string; thumbnails: Thumbnails | null; url: string; category: string; duration_in_seconds: string; view_count: string; author: Author | null; publish_date: string }
+export type ThumbnailSet = { small: Thumbnail; medium: Thumbnail; standard: Thumbnail }
+export type VideoDetails = { id: string; title: string; description: string; thumbnails: ThumbnailSet | null; url: string; category: string; duration_in_seconds: string; view_count: string; author: Author | null; publish_date: string }
 
 /** tauri-specta globals **/
 
