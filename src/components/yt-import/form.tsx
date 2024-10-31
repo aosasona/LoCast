@@ -7,7 +7,6 @@ import { Clipboard } from "@phosphor-icons/react";
 
 type Props = {
 	open: boolean;
-	defaultUrl?: string;
 	form: UseFormReturn<FieldValues>;
 	submitting: boolean;
 	onSubmit: SubmitHandler<FieldValues>;
@@ -40,7 +39,7 @@ export default function ImportForm(props: Props) {
 			</Dialog.Description>
 
 			<Box mt="4" mb="6">
-				<Form.Field name="url" defaultValue={props.defaultUrl}>
+				<Form.Field name="url">
 					<Form.Label>
 						<Text size="2" color="gray">
 							Video or playlist URL

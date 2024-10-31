@@ -1,7 +1,12 @@
 import { VideoDetails } from "$/lib/bindings";
-import { CaretLeft, Plus } from "@phosphor-icons/react";
-import { Badge, Box, Button, Dialog, Flex, Link, Text } from "@radix-ui/themes";
+import YouTubeSource from "$/lib/sources/youtube";
+import { ArrowClockwise, CaretLeft, Plus } from "@phosphor-icons/react";
+import { Badge, Box, Button, Dialog, Flex, Heading, IconButton, Link, Spinner, Text, TextField, Tooltip } from "@radix-ui/themes";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import { toast } from "sonner";
+
+const DESCRIPTION_LIMIT = 200;
 
 type Props = {
 	data: VideoDetails;
@@ -19,17 +24,38 @@ function formatDuration(duration: number) {
 }
 
 // TODO: squash these into the same modal content box
-export default function Overview({ data, ...props }: Props) {
+export default function Overview(props: Props) {
+	const [url, setUrl] = useState("");
+	const [data, setData] = useState<VideoDetails>(props.data);
+
+	const mutation = useMutation({
+		mutationFn: YouTubeSource.loadVideoInfo,
+		onSuccess: (data) => setData(data),
+		onError: (error) => toast.error(error.message),
+	});
+
 	return (
 		<Flex direction="column" gap="5">
 			<Flex direction="column" align="start" gap="4">
-				<Box width="auto" className="aspect-video object-cover">
+				<Flex gap="3" align="center" width="100%">
+					<Box width="100%">
+						<TextField.Root value={data.url} variant="surface" onChange={(e) => setUrl(e.target.value)} />
+					</Box>
+
+					<Tooltip content="Reload video info">
+						<IconButton variant="ghost" onClick={() => mutation.mutate(url)} disabled={url == props.data.url || url.trim().length == 0}>
+							<ArrowClockwise className={mutation.isPending ? "animate-spin" : ""} />
+						</IconButton>
+					</Tooltip>
+				</Flex>
+
+				<Box width="auto" className="aspect-video object-cover border border-gray-600 rounded-md overflow-hidden">
 					<img src={data.thumbnails?.standard.url} alt={data.title} className="w-full h-full object-cover" />
 				</Box>
 
-				<Flex direction="column" gap="2" className="max-w-full">
-					<Dialog.Title className="m-0">{data.title}</Dialog.Title>
-					<Flex gap="2" align="center">
+				<Flex direction="column" gap="2" className="max-w-full transition-all">
+					<Heading className="m-0">{data.title}</Heading>
+					<Flex gap="2" align="center" wrap="wrap">
 						{data.author ? (
 							<Link href={data.author.url} target="_blank" rel="noopener noreferrer">
 								<Text size="2">{data.author?.name}</Text>
@@ -48,24 +74,22 @@ export default function Overview({ data, ...props }: Props) {
 							</Badge>
 						)}
 					</Flex>
+
+					<Text size="2" color="gray">
+						{data.description.length > DESCRIPTION_LIMIT ? `${data.description.slice(0, DESCRIPTION_LIMIT)?.trim()}...` : data.description}
+					</Text>
 				</Flex>
 			</Flex>
 
-			<Flex align="center" justify="between">
-				<Button color="gray" variant="ghost" onClick={props.prev}>
-					<CaretLeft /> Back
-				</Button>
-
-				<Flex gap="2" align="center" justify="end">
-					<Dialog.Close>
-						<Button type="button" variant="soft" color="gray">
-							Cancel
-						</Button>
-					</Dialog.Close>
-					<Button type="button" onClick={() => toast.info("TODO")}>
-						<Plus /> Import
+			<Flex gap="2" align="center" justify="end">
+				<Dialog.Close>
+					<Button type="button" variant="soft" color="gray">
+						Cancel
 					</Button>
-				</Flex>
+				</Dialog.Close>
+				<Button type="button" onClick={() => toast.info("TODO")} disabled={mutation.isPending}>
+					<Plus /> Import
+				</Button>
 			</Flex>
 		</Flex>
 	);
