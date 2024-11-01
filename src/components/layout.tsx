@@ -89,7 +89,7 @@ export default function Layout({ children }: Props) {
 		<Fragment>
 			<div className="w-screen h-8 fixed top-0 left-0 right-0 z-[999999999]" data-tauri-drag-region />
 
-			<Flex overflow="hidden">
+			<Flex overflowY="hidden">
 				<Flex
 					direction="column"
 					width={collapseSidebar ? "60px" : "240px"}

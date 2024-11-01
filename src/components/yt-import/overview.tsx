@@ -1,9 +1,11 @@
 import { VideoDetails } from "$/lib/bindings";
 import YouTubeSource from "$/lib/sources/youtube";
-import { ArrowClockwise, CaretLeft, Plus } from "@phosphor-icons/react";
-import { Badge, Box, Button, Dialog, Flex, Heading, IconButton, Link, Spinner, Text, TextField, Tooltip } from "@radix-ui/themes";
+import { ArrowClockwise, Plus } from "@phosphor-icons/react";
+import { Badge, Box, Button, Dialog, Flex, Heading, IconButton, Link, Text, TextField, Tooltip } from "@radix-ui/themes";
+import * as Form from "@radix-ui/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const DESCRIPTION_LIMIT = 200;
@@ -25,8 +27,13 @@ function formatDuration(duration: number) {
 
 // TODO: squash these into the same modal content box
 export default function Overview(props: Props) {
-	const [url, setUrl] = useState("");
 	const [data, setData] = useState<VideoDetails>(props.data);
+
+	const { register, handleSubmit, getValues } = useForm({
+		defaultValues: {
+			url: data.url,
+		},
+	});
 
 	const mutation = useMutation({
 		mutationFn: YouTubeSource.loadVideoInfo,
@@ -34,20 +41,34 @@ export default function Overview(props: Props) {
 		onError: (error) => toast.error(error.message),
 	});
 
+	function handleReload(data: Record<string, string>) {
+		return mutation.mutate(data.url);
+	}
+
 	return (
 		<Flex direction="column" gap="5">
 			<Flex direction="column" align="start" gap="4">
-				<Flex gap="3" align="center" width="100%">
-					<Box width="100%">
-						<TextField.Root value={data.url} variant="surface" onChange={(e) => setUrl(e.target.value)} />
-					</Box>
+				<Form.Root onSubmit={handleSubmit(handleReload)} className="w-full">
+					<Flex gap="3" align="center">
+						<Form.Field name="url" className="w-full">
+							<Form.Control asChild>
+								<TextField.Root
+									{...register("url", {
+										value: data.url,
+										required: "This field is required",
+										pattern: YouTubeSource.LINK_PATTERN,
+									})}
+								/>
+							</Form.Control>
+						</Form.Field>
 
-					<Tooltip content="Reload video info">
-						<IconButton variant="ghost" onClick={() => mutation.mutate(url)} disabled={url == props.data.url || url.trim().length == 0}>
-							<ArrowClockwise className={mutation.isPending ? "animate-spin" : ""} />
-						</IconButton>
-					</Tooltip>
-				</Flex>
+						<Tooltip content="Reload video info">
+							<IconButton type="submit" variant="ghost">
+								<ArrowClockwise className={mutation.isPending ? "animate-spin" : ""} />
+							</IconButton>
+						</Tooltip>
+					</Flex>
+				</Form.Root>
 
 				<Box width="auto" className="aspect-video object-cover border border-gray-600 rounded-md overflow-hidden">
 					<img src={data.thumbnails?.standard.url} alt={data.title} className="w-full h-full object-cover" />
