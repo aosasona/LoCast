@@ -28,7 +28,7 @@ impl Display for Key {
     }
 }
 
-#[derive(Serialize, Deserialize, Type)]
+#[derive(Debug, Serialize, Deserialize, Type)]
 pub enum Version {
     V1,
 }
@@ -103,10 +103,10 @@ impl DbCache {
     }
 
     // Set the cache entry, incrementing the version number if the key already exists
-    pub async fn set<T: Serialize>(&self, key: Key, value: &T) -> anyhow::Result<Version> {
+    pub async fn set<T: Serialize>(&self, key: Key, value: T) -> anyhow::Result<Version> {
         let mut conn = self.pool.acquire().await?;
         let key = key.to_string();
-        let value = serde_json::to_string(value)?;
+        let value = serde_json::to_string(&value)?;
 
         let last_version = sqlx::query!(
             r#"SELECT version FROM cache WHERE key = ?1 ORDER BY version DESC LIMIT 1"#,

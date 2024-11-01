@@ -5,7 +5,7 @@ use tauri::State;
 
 use crate::{cache::Key, types::AppState};
 
-#[derive(Debug, Serialize, Deserialize, Type)]
+#[derive(Clone, Debug, Serialize, Deserialize, Type)]
 pub struct Thumbnail {
     pub url: String,
     pub width: i32,
@@ -13,14 +13,14 @@ pub struct Thumbnail {
 }
 
 // We will only store the small and standard thumbnails for now (previews and actual display)
-#[derive(Debug, Serialize, Deserialize, Type)]
+#[derive(Clone, Debug, Serialize, Deserialize, Type)]
 pub struct ThumbnailSet {
     pub small: Thumbnail,
     pub medium: Thumbnail,
     pub standard: Thumbnail,
 }
 
-#[derive(Debug, Serialize, Deserialize, Type)]
+#[derive(Clone, Debug, Serialize, Deserialize, Type)]
 pub struct Author {
     pub id: String,
     pub name: String,
@@ -28,7 +28,7 @@ pub struct Author {
     pub url: String,
 }
 
-#[derive(Debug, Serialize, Deserialize, Type)]
+#[derive(Clone, Debug, Serialize, Deserialize, Type)]
 pub struct VideoDetails {
     pub id: String,
     pub title: String,
@@ -78,14 +78,7 @@ pub async fn get_video_info(id: &str, state: State<'_, AppState>) -> Result<Vide
         });
     }
 
-    tokio::spawn(async move {
-        let _ = state
-            .cache
-            .set(Key::YoutubeVideoInfo(id.to_string()), info.clone())
-            .await;
-    });
-
-    Ok(VideoDetails {
+    let video_info = VideoDetails {
         id: info.video_id,
         title: info.title,
         description: info.description,
@@ -96,7 +89,18 @@ pub async fn get_video_info(id: &str, state: State<'_, AppState>) -> Result<Vide
         category: info.category,
         duration_in_seconds: info.length_seconds,
         publish_date: info.publish_date,
-    })
+    };
+
+    match state
+        .cache
+        .set(Key::YoutubeVideoInfo(id.to_string()), video_info.clone())
+        .await
+    {
+        Ok(_) => log::info!("cached video info for {}", id),
+        Err(e) => log::error!("failed to cache video info: {}", e),
+    }
+
+    Ok(video_info)
 }
 
 // Extract the small, medium, and standard thumbnails from the list of thumbnails
