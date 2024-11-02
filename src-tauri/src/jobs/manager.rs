@@ -2,7 +2,7 @@ use sqlx::{Pool, Sqlite, SqlitePool};
 use std::{ops::Deref, sync::Arc};
 
 use super::{Action, Job};
-use crate::sources::types::VideoDetails;
+use crate::sources::types::{Author, SourceType, VideoDetails};
 
 pub struct JobManager {
     db_pool: Arc<SqlitePool>,
@@ -22,7 +22,7 @@ impl JobManager {
     ) -> anyhow::Result<i64> {
         match action {
             Action::ImportYtVideo => self.create_yt_import_job(meta).await,
-            Action::CreateAuthor => self.create_author_import_job(meta).await,
+            Action::CreateAuthor => self.create_yt_author_import_job(meta).await,
         }
     }
 
@@ -40,6 +40,7 @@ impl JobManager {
             Some(author) => self.author_exists(author.id.deref()).await?,
         };
 
+        // Enqueue a job to create the author if they don't exist already
         if !author_exists {
             let author_meta = serde_json::to_value(meta.author)?;
             Box::pin(self.enqueue(Action::CreateAuthor, Some(author_meta))).await?;
@@ -62,10 +63,33 @@ impl JobManager {
         .map_err(Into::into)
     }
 
-    async fn create_author_import_job(
+    async fn create_yt_author_import_job(
         &self,
         meta: Option<serde_json::Value>,
     ) -> anyhow::Result<i64> {
+        let author: Author = match meta {
+            Some(meta) => serde_json::from_value(meta)?,
+            None => return Err(anyhow::anyhow!("missing metadata for job")),
+        };
+
+        // The author needs to exist before we can import a video, so we need to create the author
+        // record regardless of whether the job is successful or not
+        // Only job required for the author is to actual download the images and store them locally
+        let asset_id = SourceType::Youtube.generate_asset_id();
+        let source_type: String = SourceType::Youtube.into();
+        sqlx::query!(
+            r#"
+            INSERT INTO authors (name, source_id, source_type, asset_id)
+            VALUES (?1, ?2, ?3, ?4)
+            "#,
+            author.name,
+            author.id,
+            source_type,
+            asset_id
+        )
+        .execute(self.db_pool.deref())
+        .await?;
+
         todo!()
     }
 

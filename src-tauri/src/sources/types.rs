@@ -2,6 +2,36 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
+pub enum SourceType {
+    Youtube,
+}
+
+impl From<SourceType> for String {
+    fn from(val: SourceType) -> Self {
+        match val {
+            SourceType::Youtube => "youtube".to_string(),
+        }
+    }
+}
+
+impl From<String> for SourceType {
+    fn from(val: String) -> Self {
+        match val.as_str() {
+            "youtube" => SourceType::Youtube,
+            _ => panic!("Invalid source type"),
+        }
+    }
+}
+
+impl SourceType {
+    pub fn generate_asset_id(&self) -> String {
+        match self {
+            SourceType::Youtube => format!("yt:{}", nanoid::nanoid!(12, &nanoid::alphabet::SAFE)),
+        }
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize, Type)]
 pub struct Thumbnail {
     pub url: String,
     pub width: i32,
