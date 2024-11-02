@@ -23,7 +23,7 @@ async fn setup<T: tauri::Runtime>(manager: &impl tauri::Manager<T>, app: &AppHan
 
     let arc_pool = Arc::new(db_pool);
 
-    let job_manager = Arc::new(jobs::JobManager::new(arc_pool.clone(), app.clone()));
+    let job_manager = Arc::new(jobs::Manager::new(arc_pool.clone(), app.clone()));
     manager.manage(types::AppState {
         job_manager: Arc::clone(&job_manager),
         cache: DbCache::new(Arc::clone(&arc_pool)),
