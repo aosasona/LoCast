@@ -41,7 +41,7 @@ export default function App() {
 			<QueryClientProvider client={queryClient}>
 				<Theme accentColor="lime" appearance="dark" radius="medium" grayColor="gray" scaling="95%">
 					<RouterProvider router={router} />
-					<Toaster theme="light" style={{ zIndex: 9999999 }} />
+					<Toaster richColors theme="light" style={{ zIndex: 9999999 }} />
 				</Theme>
 			</QueryClientProvider>
 		</StrictMode>
