@@ -89,6 +89,25 @@ pub(crate) fn get_migrations() -> Vec<Migration> {
             description: "add_source_id_to_authors",
             sql: "ALTER TABLE authors ADD COLUMN source_id TEXT;",
             kind: MigrationKind::Up,
-        }
+        },
+        Migration {
+            version: 6,
+            description: "remove_redundant_url_column",
+            sql: "ALTER TABLE authors DROP COLUMN url;",
+            kind: MigrationKind::Up,
+        },
+        // We actually do not need source_url since we can construct it from the source_id
+        Migration {
+            version: 7,
+            description: "remove_source_url_column",
+            sql: "ALTER TABLE authors DROP COLUMN source_url;",
+            kind: MigrationKind::Up,
+        },
+        Migration {
+            version: 8,
+            description: "add_source_type_to_authors",
+            sql: "ALTER TABLE authors ADD COLUMN source_type TEXT NOT NULL DEFAULT 'youtube';",
+            kind: MigrationKind::Up,
+        },
     ]
 }
