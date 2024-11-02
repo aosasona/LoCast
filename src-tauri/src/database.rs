@@ -1,7 +1,7 @@
-use sqlx::{sqlite::SqlitePool, Pool, Sqlite};
+use sqlx::sqlite::SqlitePool;
 use tauri_plugin_sql::{Migration, MigrationKind};
 
-pub async fn make_pool() -> Result<Pool<Sqlite>, String> {
+pub async fn make_pool() -> Result<SqlitePool, String> {
     SqlitePool::connect("sqlite:locast.db")
         .await
         .map_err(|e| e.to_string())
@@ -82,6 +82,12 @@ pub(crate) fn get_migrations() -> Vec<Migration> {
             CHECK (version > 0)
         ) STRICT;
         ",
+            kind: MigrationKind::Up,
+        },
+        Migration {
+            version: 5,
+            description: "add_source_id_to_authors",
+            sql: "ALTER TABLE authors ADD COLUMN source_id TEXT;",
             kind: MigrationKind::Up,
         }
     ]
