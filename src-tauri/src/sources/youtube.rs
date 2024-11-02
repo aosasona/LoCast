@@ -1,46 +1,8 @@
 use rusty_ytdl::Video;
-use serde::{Deserialize, Serialize};
-use specta::Type;
 use tauri::State;
 
-use crate::{cache::Key, types::AppState};
-
-#[derive(Clone, Debug, Serialize, Deserialize, Type)]
-pub struct Thumbnail {
-    pub url: String,
-    pub width: i32,
-    pub height: i32,
-}
-
-// We will only store the small and standard thumbnails for now (previews and actual display)
-#[derive(Clone, Debug, Serialize, Deserialize, Type)]
-pub struct ThumbnailSet {
-    pub small: Thumbnail,
-    pub medium: Thumbnail,
-    pub standard: Thumbnail,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize, Type)]
-pub struct Author {
-    pub id: String,
-    pub name: String,
-    pub thumbnails: Option<ThumbnailSet>,
-    pub url: String,
-}
-
-#[derive(Clone, Debug, Serialize, Deserialize, Type)]
-pub struct VideoDetails {
-    pub id: String,
-    pub title: String,
-    pub description: String,
-    pub thumbnails: Option<ThumbnailSet>,
-    pub url: String,
-    pub category: String,
-    pub duration_in_seconds: String,
-    pub view_count: String,
-    pub author: Option<Author>,
-    pub publish_date: String,
-}
+use super::types::{Author, Thumbnail, ThumbnailSet, VideoDetails};
+use crate::{cache::Key, jobs::Action, types::AppState};
 
 #[tauri::command]
 #[specta::specta]
@@ -101,6 +63,17 @@ pub async fn get_video_info(id: &str, state: State<'_, AppState>) -> Result<Vide
     }
 
     Ok(video_info)
+}
+
+// Videos are only really imported after they have been processed by the job manager, so here we
+// just add the video to the job queue
+async fn import_video(details: VideoDetails, state: State<'_, AppState>) -> anyhow::Result<()> {
+    let serialized_meta = serde_json::to_value(details)?;
+    state
+        .job_manager
+        .enqueue(Action::ImportYtVideo, Some(serialized_meta))
+        .await?;
+    Ok(())
 }
 
 // Extract the small, medium, and standard thumbnails from the list of thumbnails
