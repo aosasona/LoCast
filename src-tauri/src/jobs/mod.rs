@@ -1,7 +1,5 @@
-mod commands;
+pub mod commands;
 mod manager;
-mod types;
+pub mod types;
 
-pub use commands::*;
 pub use manager::*;
-pub use types::*;

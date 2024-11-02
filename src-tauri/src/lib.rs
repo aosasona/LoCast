@@ -1,16 +1,18 @@
-use std::sync::Arc;
-
-use cache::DbCache;
-use specta_typescript::Typescript;
-use tauri_specta::{collect_commands, Builder};
-
 mod cache;
 mod database;
 mod jobs;
+mod queries;
 mod sources;
 mod types;
 
-async fn setup<T: tauri::Runtime>(manager: &impl tauri::Manager<T>) {
+use cache::DbCache;
+use sources::{types::VideoImportEvent, youtube};
+use specta_typescript::Typescript;
+use std::sync::Arc;
+use tauri::AppHandle;
+use tauri_specta::{collect_commands, collect_events, Builder};
+
+async fn setup<T: tauri::Runtime>(manager: &impl tauri::Manager<T>, app: &AppHandle) {
     let db_pool = match database::make_pool().await {
         Ok(pool) => pool,
         Err(e) => {
@@ -21,12 +23,12 @@ async fn setup<T: tauri::Runtime>(manager: &impl tauri::Manager<T>) {
 
     let arc_pool = Arc::new(db_pool);
 
-    let job_manager = Arc::new(jobs::JobManager::new(arc_pool.clone()));
-
+    let job_manager = Arc::new(jobs::JobManager::new(arc_pool.clone(), app.clone()));
     manager.manage(types::AppState {
         job_manager: Arc::clone(&job_manager),
         cache: DbCache::new(Arc::clone(&arc_pool)),
         db_pool: Arc::clone(&arc_pool),
+        queries: queries::Queries::new(Arc::clone(&arc_pool)),
     });
 
     job_manager.start().await;
@@ -34,8 +36,12 @@ async fn setup<T: tauri::Runtime>(manager: &impl tauri::Manager<T>) {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let builder =
-        Builder::<tauri::Wry>::new().commands(collect_commands![sources::youtube::get_video_info]);
+    let builder = Builder::<tauri::Wry>::new()
+        .commands(collect_commands![
+            youtube::import_video,
+            youtube::get_video_info,
+        ])
+        .events(collect_events![VideoImportEvent]);
 
     #[cfg(debug_assertions)]
     builder
@@ -43,9 +49,12 @@ pub fn run() {
         .expect("Failed to export typescript bindings");
 
     tauri::Builder::default()
-        .setup(|app| {
+        .invoke_handler(builder.invoke_handler())
+        .setup(move |app| {
+            builder.mount_events(app);
+
             tauri::async_runtime::block_on(async move {
-                setup(app).await;
+                setup(app, app.handle()).await;
             });
 
             Ok(())
@@ -61,7 +70,6 @@ pub fn run() {
                 .add_migrations("sqlite:locast.db", database::get_migrations())
                 .build(),
         )
-        .invoke_handler(builder.invoke_handler())
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

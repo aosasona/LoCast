@@ -109,5 +109,11 @@ pub(crate) fn get_migrations() -> Vec<Migration> {
             sql: "ALTER TABLE authors ADD COLUMN source_type TEXT NOT NULL DEFAULT 'youtube';",
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 9,
+            description: "remove_source_url_from_items",
+            sql: "ALTER TABLE items DROP COLUMN source_url;",
+            kind: MigrationKind::Up,
+        },
     ]
 }

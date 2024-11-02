@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use specta::Type;
+use tauri_specta::Event;
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type)]
 pub enum SourceType {
@@ -66,4 +67,14 @@ pub struct VideoDetails {
     pub view_count: String,
     pub author: Option<Author>,
     pub publish_date: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Type, Event)]
+pub struct VideoImportEvent {
+    pub job_id: i32,
+    pub title: String,
+    pub author_name: String,
+    pub duration_in_seconds: i32,
+    pub status: crate::jobs::types::JobStatus,
+    pub created_at: i32,
 }

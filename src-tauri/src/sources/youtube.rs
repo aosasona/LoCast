@@ -2,7 +2,7 @@ use rusty_ytdl::Video;
 use tauri::State;
 
 use super::types::{Author, Thumbnail, ThumbnailSet, VideoDetails};
-use crate::{cache::Key, jobs::Action, types::AppState};
+use crate::{cache::Key, jobs::types::Action, types::AppState};
 
 #[tauri::command]
 #[specta::specta]
@@ -67,12 +67,17 @@ pub async fn get_video_info(id: &str, state: State<'_, AppState>) -> Result<Vide
 
 // Videos are only really imported after they have been processed by the job manager, so here we
 // just add the video to the job queue
-async fn import_video(details: VideoDetails, state: State<'_, AppState>) -> anyhow::Result<()> {
-    let serialized_meta = serde_json::to_value(details)?;
+#[tauri::command]
+#[specta::specta]
+pub async fn import_video(state: State<'_, AppState>, details: VideoDetails) -> Result<(), String> {
+    let serialized_meta = serde_json::to_value(details).map_err(|e| e.to_string())?;
+
     state
         .job_manager
         .enqueue(Action::ImportYtVideo, Some(serialized_meta))
-        .await?;
+        .await
+        .map_err(|e| e.to_string())?;
+
     Ok(())
 }
 
