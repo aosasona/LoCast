@@ -1,4 +1,4 @@
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use sqlx::Type;
 
 #[derive(Clone, Serialize, Deserialize, Type)]
@@ -16,6 +16,7 @@ pub enum ResourceType {
 }
 
 #[derive(Serialize, Deserialize, Clone, Type)]
+#[serde(rename_all = "snake_case")]
 pub enum JobStatus {
     Queued,
     InProgress,
@@ -23,16 +24,13 @@ pub enum JobStatus {
     Failed,
 }
 
-pub struct Job<T>
-where
-    T: Serialize + DeserializeOwned,
-{
+pub struct Job {
     pub id: i64,
     pub action: Action,
     pub resource_type: ResourceType,
     pub resource_id: i64,
     pub status: JobStatus,
-    pub meta: Option<T>,
+    pub meta: Option<serde_json::Value>,
     pub retry_count: i32,
     pub failure_reason: Option<String>,
     pub created_at: chrono::NaiveDateTime,
