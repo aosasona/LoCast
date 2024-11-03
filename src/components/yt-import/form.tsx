@@ -3,7 +3,9 @@ import * as Form from "@radix-ui/react-form";
 import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
 import { useEffect } from "react";
 import YouTubeSource from "$/lib/sources/youtube";
+import { readText } from "@tauri-apps/plugin-clipboard-manager";
 import { Clipboard } from "@phosphor-icons/react";
+import { presentError } from "$/lib/error";
 
 type Props = {
 	open: boolean;
@@ -24,9 +26,9 @@ export default function ImportForm(props: Props) {
 	}, [props.open]);
 
 	function pasteFromClipboard() {
-		navigator.clipboard.readText().then((text) => {
-			props.form.setValue("url", text);
-		});
+		readText()
+			.then((text) => props.form.setValue("url", text))
+			.catch(presentError);
 	}
 
 	return (

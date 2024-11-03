@@ -1,17 +1,18 @@
 {
-  "$schema": "../gen/schemas/desktop-schema.json",
-  "identifier": "default",
-  "description": "Capability for the main window",
-  "windows": [
-    "main"
-  ],
-  "permissions": [
-    "core:default",
-    "core:window:default",
-    "core:window:allow-start-dragging",
-    "shell:allow-open",
-    "log:default",
-    "sql:default",
-    "sql:allow-execute"
-  ]
+	"$schema": "../gen/schemas/desktop-schema.json",
+	"identifier": "default",
+	"description": "Capability for the main window",
+	"windows": ["main"],
+	"permissions": [
+		"core:default",
+		"core:window:default",
+		"core:window:allow-start-dragging",
+		"shell:allow-open",
+		"log:default",
+		"sql:default",
+		"sql:allow-execute",
+		"clipboard-manager:allow-read-text",
+		"clipboard-manager:allow-write-text",
+		"clipboard-manager:allow-clear"
+	]
 }
