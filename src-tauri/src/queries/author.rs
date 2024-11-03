@@ -42,19 +42,14 @@ impl AuthorQueries {
     pub async fn create(&self, author: Author) -> anyhow::Result<Author> {
         let asset_id = author.source_type.generate_asset_id();
 
-        let record: Author = sqlx::query_as("INSERT INTO authors (name, source_id, source_type, asset_id) VALUES (?1, ?2, ?3, ?4) RETURNING *")
+        sqlx::query_as::<_, Author>("INSERT INTO authors (name, source_id, source_type, asset_id) VALUES (?1, ?2, ?3, ?4) RETURNING *")
             .bind(&author.name)
             .bind(&author.source_id)
             .bind(&author.source_type)
             .bind(&asset_id)
             .fetch_one(self.db_pool.deref())
-            .await?;
-
-        Ok(record)
-    }
-
-    pub async fn delete(&self, author_id: i64) -> anyhow::Result<()> {
-        todo!()
+            .await
+            .map_err(|e| anyhow::anyhow!("Failed to create author: {}", e))
     }
 
     pub async fn find_author_id_by_youtube_id(
