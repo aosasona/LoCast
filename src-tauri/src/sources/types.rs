@@ -2,7 +2,8 @@ use serde::{Deserialize, Serialize};
 use specta::Type;
 use tauri_specta::Event;
 
-#[derive(Clone, Debug, Serialize, Deserialize, Type)]
+#[derive(Clone, Debug, Serialize, Deserialize, Type, sqlx::Type)]
+#[sqlx(rename_all = "snake_case")]
 pub enum SourceType {
     Youtube,
 }

@@ -6,7 +6,7 @@ use tauri_specta::Event as _;
 
 use super::types::{Action, CreateJobInput, Job, JobStatus, ResourceType};
 use crate::{
-    queries::Queries,
+    queries::{item::Item, Queries},
     sources::types::{Author, SourceType, VideoDetails, VideoImportEvent},
 };
 
@@ -17,6 +17,7 @@ pub struct Manager {
     queries: Queries,
 }
 
+// TODO: emit children events for things like authors
 impl Manager {
     pub fn new(db_pool: Arc<Pool<Sqlite>>, app: AppHandle) -> Self {
         let queries = Queries::new(Arc::clone(&db_pool));
@@ -27,20 +28,33 @@ impl Manager {
         }
     }
 
-    pub async fn start(&self) {}
+    pub async fn start(&self) {
+        // This manager class will hold a channel where it will listen for new jobs to be processed
+        // The enqueue method will create a new job and insert it into the database and then send a
+        // message to the channel
+        //
+        // All pending jobs meeting the criteria will also be loaded on startup
+        // Maximum number of jobs to be processed concurrently will be configurable via a constant
+        unimplemented!()
+    }
 
     pub async fn enqueue(
         &self,
         action: Action,
         meta: Option<serde_json::Value>,
     ) -> anyhow::Result<Job> {
+        // TODO: we cannot check that the item has not been previously processed/imported since it is possible that the item was imported and then deleted.
+        // - We need to add a check to see if the actual item exists in whatever table it is in
+        // - We also need to check if any such item is already in the queue
         match action {
             Action::ImportYtVideo => self.create_yt_import_job(meta).await,
             Action::CreateYtAuthor => self.create_yt_author_import_job(meta).await,
         }
     }
 
-    pub async fn dequeue(&self) {}
+    pub async fn dequeue(&self, job_id: i64) -> anyhow::Result<()> {
+        todo!()
+    }
 
     async fn create_yt_import_job(&self, meta: Option<serde_json::Value>) -> anyhow::Result<Job> {
         let meta: VideoDetails = match meta {
@@ -65,6 +79,9 @@ impl Manager {
             Box::pin(self.enqueue(Action::CreateYtAuthor, Some(author_meta))).await?;
         }
 
+        // Before we proceed, we need to ensure that the item has not already been imported and
+        // that it is not already in the queue
+
         author_id = self
             .queries
             .author
@@ -72,24 +89,25 @@ impl Manager {
             .await?;
 
         // Create the item record
-        let asset_id = SourceType::Youtube.generate_asset_id();
-        let source_type: String = SourceType::Youtube.into();
         let duration_in_seconds = meta.duration_in_seconds.parse::<i64>()?;
-        let resource_id = sqlx::query!(
-                r#"
-                INSERT INTO items (title, description, category, duration_in_seconds, source_type, source_id, asset_id, author_id)
-                VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)
-                "#,
-                meta.title, meta.description, meta.category, duration_in_seconds, source_type, meta.id, asset_id, author_id
-            )
-            .execute(self.db_pool.deref())
-            .await?
-            .last_insert_rowid();
+        let item = self
+            .queries
+            .item
+            .create(Item::new(
+                meta.title.clone(),
+                meta.description.clone().into(),
+                meta.category.clone().into(),
+                duration_in_seconds,
+                SourceType::Youtube,
+                meta.id.clone(),
+                author_id,
+            ))
+            .await?;
 
         let job = CreateJobInput {
             action: Action::ImportYtVideo,
             resource_type: ResourceType::Item,
-            resource_id,
+            resource_id: item.id,
             status: JobStatus::Queued,
             meta: Some(serde_json::to_value(meta.clone())?),
         };
