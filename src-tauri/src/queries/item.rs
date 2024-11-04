@@ -78,4 +78,18 @@ impl ItemQueries {
             .await
             .map_err(|e| anyhow::anyhow!("Failed to create item: {:?}", e))
     }
+
+    pub async fn find_item_by_source_id(&self, source_id: &str) -> anyhow::Result<Option<Item>> {
+        let item = sqlx::query_as::<_, Item>(
+            r#"
+                SELECT * FROM items WHERE source_id = ?1
+                "#,
+        )
+        .bind(source_id)
+        .fetch_optional(self.db_pool.deref())
+        .await
+        .map_err(|e| anyhow::anyhow!("Failed to find item by source id: {:?}", e))?;
+
+        Ok(item)
+    }
 }

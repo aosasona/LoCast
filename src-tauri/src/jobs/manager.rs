@@ -17,6 +17,26 @@ pub struct Manager {
     queries: Queries,
 }
 
+macro_rules! in_queue {
+    ($self:expr, $action:expr, $resource_type:expr, $id:expr) => {
+        sqlx::query!(
+            r#"
+            SELECT id FROM jobs
+            WHERE action = ?1
+                AND resource_type = ?2
+                AND status IN ('queued', 'in_progress')
+                AND meta->>'id' = ?3
+            "#,
+            $action,
+            $resource_type,
+            $id
+        )
+        .fetch_optional($self.db_pool.deref())
+        .await?
+        .is_some()
+    };
+}
+
 // TODO: emit children events for things like authors
 impl Manager {
     pub fn new(db_pool: Arc<Pool<Sqlite>>, app: AppHandle) -> Self {
@@ -43,9 +63,6 @@ impl Manager {
         action: Action,
         meta: Option<serde_json::Value>,
     ) -> anyhow::Result<Job> {
-        // TODO: we cannot check that the item has not been previously processed/imported since it is possible that the item was imported and then deleted.
-        // - We need to add a check to see if the actual item exists in whatever table it is in
-        // - We also need to check if any such item is already in the queue
         match action {
             Action::ImportYtVideo => self.create_yt_import_job(meta).await,
             Action::CreateYtAuthor => self.create_yt_author_import_job(meta).await,
@@ -81,6 +98,22 @@ impl Manager {
 
         // Before we proceed, we need to ensure that the item has not already been imported and
         // that it is not already in the queue
+
+        // Check for presence in items table
+        let item_exists = self
+            .queries
+            .item
+            .find_item_by_source_id(meta.id.deref())
+            .await?
+            .is_some();
+        if item_exists {
+            return Err(anyhow::anyhow!("item already exists in the library"));
+        }
+
+        // Check in queued jobs
+        if in_queue!(self, Action::ImportYtVideo, ResourceType::Item, meta.id) {
+            return Err(anyhow::anyhow!("item is already in the queue"));
+        }
 
         author_id = self
             .queries
@@ -138,30 +171,36 @@ impl Manager {
             None => return Err(anyhow::anyhow!("missing metadata for job")),
         };
 
-        // The author needs to exist before we can import a video, so we need to create the author
-        // record regardless of whether the job is successful or not
-        // Only job required for the author is to actual download the images and store them locally
-        let asset_id = SourceType::Youtube.generate_asset_id();
-        let source_type: String = SourceType::Youtube.into();
-        let resource_id = sqlx::query!(
-            r#"
-            INSERT INTO authors (name, source_id, source_type, asset_id)
-            VALUES (?1, ?2, ?3, ?4)
-            "#,
-            author.name,
-            author.id,
-            source_type,
-            asset_id
-        )
-        .execute(self.db_pool.deref())
-        .await?
-        .last_insert_rowid();
+        // Verify that the item has not already been queued
+        //
+        // NOTE: We don't need to check if the author has been imported already here since this job is
+        // only created when the author is not found in the database, in the future, this might
+        // change though
+
+        if in_queue!(
+            self,
+            Action::CreateYtAuthor,
+            ResourceType::Author,
+            author.id
+        ) {
+            return Err(anyhow::anyhow!("author is already in the queue"));
+        }
+
+        let created_author = self
+            .queries
+            .author
+            .create(crate::queries::author::Author::new(
+                author.name,
+                author.id,
+                SourceType::Youtube,
+            ))
+            .await?;
 
         // Enqueue a job to download the author's thumbnails
         let job = CreateJobInput {
             action: Action::CreateYtAuthor,
             resource_type: ResourceType::Author,
-            resource_id,
+            resource_id: created_author.id,
             status: JobStatus::Queued,
             meta,
         };

@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::Type;
 
 #[derive(Clone, Serialize, Deserialize, Type)]
+#[sqlx(rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum Action {
     ImportYtVideo,
@@ -20,6 +21,7 @@ impl From<String> for Action {
 }
 
 #[derive(Clone, Copy, Serialize, Deserialize, Type)]
+#[sqlx(rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum ResourceType {
     Author,
@@ -37,12 +39,14 @@ impl From<String> for ResourceType {
 }
 
 #[derive(Serialize, Deserialize, Clone, Type, specta::Type)]
+#[sqlx(rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum JobStatus {
     Queued,
     InProgress,
     Completed,
     Failed,
+    Cancelled,
 }
 
 impl From<String> for JobStatus {
