@@ -76,6 +76,6 @@ pub struct VideoImportEvent {
     pub title: String,
     pub author_name: String,
     pub duration_in_seconds: i32,
-    pub status: crate::jobs::types::JobStatus,
+    pub status: crate::queries::types::JobStatus,
     pub created_at: i32,
 }

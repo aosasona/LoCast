@@ -2,7 +2,7 @@ use rusty_ytdl::Video;
 use tauri::State;
 
 use super::types::{Author, Thumbnail, ThumbnailSet, VideoDetails};
-use crate::{cache::Key, jobs::types::Action, types::AppState};
+use crate::{cache::Key, queries::types::Action, types::AppState};
 
 #[tauri::command]
 #[specta::specta]

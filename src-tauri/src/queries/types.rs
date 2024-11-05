@@ -2,7 +2,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::Type;
 
-#[derive(Clone, Serialize, Deserialize, Type)]
+#[derive(Debug, Clone, Serialize, Deserialize, Type)]
 #[sqlx(rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum Action {
@@ -20,7 +20,7 @@ impl From<String> for Action {
     }
 }
 
-#[derive(Clone, Copy, Serialize, Deserialize, Type)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Type)]
 #[sqlx(rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum ResourceType {
@@ -38,7 +38,7 @@ impl From<String> for ResourceType {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Type, specta::Type)]
+#[derive(Debug, Serialize, Deserialize, Clone, Type, specta::Type)]
 #[sqlx(rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum JobStatus {
@@ -59,20 +59,6 @@ impl From<String> for JobStatus {
             _ => panic!("Invalid job status"),
         }
     }
-}
-
-#[derive(Clone, Serialize, Deserialize, Type)]
-pub struct Job {
-    pub id: i64,
-    pub action: Action,
-    pub resource_type: ResourceType,
-    pub resource_id: i64,
-    pub status: JobStatus,
-    pub meta: Option<serde_json::Value>,
-    pub retry_count: i64,
-    pub failure_reason: Option<String>,
-    pub created_at: DateTime<Utc>,
-    pub last_updated: DateTime<Utc>,
 }
 
 pub struct CreateJobInput {

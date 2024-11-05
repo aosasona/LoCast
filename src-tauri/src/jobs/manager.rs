@@ -4,9 +4,13 @@ use std::{ops::Deref, sync::Arc};
 use tauri::AppHandle;
 use tauri_specta::Event as _;
 
-use super::types::{Action, CreateJobInput, Job, JobStatus, ResourceType};
 use crate::{
-    queries::{item::Item, Queries},
+    queries::{
+        item::Item,
+        job::Job,
+        types::{Action, CreateJobInput, JobStatus, ResourceType},
+        Queries,
+    },
     sources::types::{Author, SourceType, VideoDetails, VideoImportEvent},
 };
 
@@ -209,39 +213,15 @@ impl Manager {
     }
 
     async fn create_job(&self, job: &CreateJobInput) -> anyhow::Result<Job> {
-        let meta = match &job.meta {
-            Some(meta) => Some(serde_json::to_string(&meta)?),
-            None => None,
-        };
-
-        let job = sqlx::query!(
-            r#"INSERT INTO jobs (action, resource_type, resource_id, status, meta) VALUES (?1, ?2, ?3, ?4, ?5) RETURNING *"#,
-            job.action, job.resource_type, job.resource_id, job.status, meta
-        )
-        .fetch_one(self.db_pool.deref())
-        .await?;
-
-        let created_at = match Utc.timestamp_opt(job.created_at, 0) {
-            MappedLocalTime::Single(t) => t,
-            _ => return Err(anyhow::anyhow!("invalid timestamp")),
-        };
-
-        let last_updated = match Utc.timestamp_opt(job.last_updated, 0) {
-            MappedLocalTime::Single(t) => t,
-            _ => return Err(anyhow::anyhow!("invalid timestamp")),
-        };
-
-        Ok(Job {
-            id: job.id,
-            action: job.action.into(),
-            resource_type: job.resource_type.into(),
-            resource_id: job.resource_id,
-            status: job.status.into(),
-            meta: job.meta.map(|m| serde_json::from_str(&m)).transpose()?,
-            retry_count: job.retry_count,
-            failure_reason: job.failure_reason,
-            created_at,
-            last_updated,
-        })
+        self.queries
+            .job
+            .create(Job::new(
+                job.action.clone(),
+                job.resource_type,
+                job.resource_id,
+                job.status.clone(),
+                job.meta.clone(),
+            ))
+            .await
     }
 }

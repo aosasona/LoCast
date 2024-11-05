@@ -1,4 +1,4 @@
-use super::types::Job;
+use crate::queries::job::Job;
 
 #[tauri::command]
 #[specta::specta]
