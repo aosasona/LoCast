@@ -1,6 +1,6 @@
-use chrono::{MappedLocalTime, TimeZone, Utc};
+use chrono::Utc;
 use sqlx::{Pool, Sqlite, SqlitePool};
-use std::{ops::Deref, sync::Arc};
+use std::{cmp::max, collections::VecDeque, ops::Deref, sync::Arc, thread::available_parallelism};
 use tauri::AppHandle;
 use tauri_specta::Event as _;
 
@@ -14,11 +14,15 @@ use crate::{
     sources::types::{Author, SourceType, VideoDetails, VideoImportEvent},
 };
 
-// Eventually, we need to move the queries in this module to a separate queries module
+// TODO: move all queries to the job query module
 pub struct Manager {
+    max_concurrent_jobs: u8,
+
     app: AppHandle,
     db_pool: Arc<SqlitePool>,
     queries: Queries,
+
+    queue: VecDeque<Job>,
 }
 
 macro_rules! in_queue {
@@ -45,10 +49,17 @@ macro_rules! in_queue {
 impl Manager {
     pub fn new(db_pool: Arc<Pool<Sqlite>>, app: AppHandle) -> Self {
         let queries = Queries::new(Arc::clone(&db_pool));
+        let max_concurrent_jobs = match available_parallelism() {
+            Ok(available) => max(available.get() / 2, 2),
+            Err(_) => 3,
+        };
+
         Self {
+            max_concurrent_jobs: max_concurrent_jobs as u8,
             app,
             db_pool,
             queries,
+            queue: VecDeque::new(),
         }
     }
 
@@ -59,7 +70,14 @@ impl Manager {
         //
         // All pending jobs meeting the criteria will also be loaded on startup
         // Maximum number of jobs to be processed concurrently will be configurable via a constant
-        unimplemented!()
+
+        // Load all pending jobs
+
+        // Chunk the jobs into groups of max_concurrent_jobs
+
+        // Spawn a new thread to process a maximum of max_concurrent_jobs jobs
+
+        todo!()
     }
 
     pub async fn enqueue(
