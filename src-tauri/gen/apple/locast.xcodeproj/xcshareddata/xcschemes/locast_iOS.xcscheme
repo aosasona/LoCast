@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "64ACD1878CA9910A5C232EEF"
-               BuildableName = "locast.app"
+               BlueprintIdentifier = "4E81FF75AC584361DD509F46"
+               BuildableName = "LoCast.app"
                BlueprintName = "locast_iOS"
-               ReferencedContainer = "container:locast.xcodeproj">
+               ReferencedContainer = "container:LoCast.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -30,10 +30,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "64ACD1878CA9910A5C232EEF"
-            BuildableName = "locast.app"
+            BlueprintIdentifier = "4E81FF75AC584361DD509F46"
+            BuildableName = "LoCast.app"
             BlueprintName = "locast_iOS"
-            ReferencedContainer = "container:locast.xcodeproj">
+            ReferencedContainer = "container:LoCast.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <EnvironmentVariables>
@@ -65,10 +65,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "64ACD1878CA9910A5C232EEF"
-            BuildableName = "locast.app"
+            BlueprintIdentifier = "4E81FF75AC584361DD509F46"
+            BuildableName = "LoCast.app"
             BlueprintName = "locast_iOS"
-            ReferencedContainer = "container:locast.xcodeproj">
+            ReferencedContainer = "container:LoCast.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
@@ -94,10 +94,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "64ACD1878CA9910A5C232EEF"
-            BuildableName = "locast.app"
+            BlueprintIdentifier = "4E81FF75AC584361DD509F46"
+            BuildableName = "LoCast.app"
             BlueprintName = "locast_iOS"
-            ReferencedContainer = "container:locast.xcodeproj">
+            ReferencedContainer = "container:LoCast.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <EnvironmentVariables>
