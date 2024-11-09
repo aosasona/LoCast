@@ -39,7 +39,7 @@ videoImportEvent: "video-import-event"
 /** user-defined types **/
 
 export type Author = { id: string; name: string; thumbnails: ThumbnailSet | null; url: string }
-export type JobStatus = "queued" | "in_progress" | "completed" | "failed"
+export type JobStatus = "queued" | "in_progress" | "completed" | "failed" | "cancelled"
 export type Thumbnail = { url: string; width: number; height: number }
 export type ThumbnailSet = { small: Thumbnail; medium: Thumbnail; standard: Thumbnail }
 export type VideoDetails = { id: string; title: string; description: string; thumbnails: ThumbnailSet | null; url: string; category: string; duration_in_seconds: string; view_count: string; author: Author | null; publish_date: string }
