@@ -7,16 +7,13 @@ import { useMutation } from "@tanstack/react-query";
 import Overview from "./overview";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-
-type Props = {
-	open: boolean;
-	onClose: () => void;
-	onOpen: () => void;
-};
+import { importStore, toggleImportingFromYouTube } from "$/lib/stores/import";
+import { useSnapshot } from "valtio";
 
 type Stage = "form" | "overview";
 
-export default function YTImportModal(props: Props) {
+export default function YTImportModal() {
+	const store = useSnapshot(importStore);
 	const [stage, setStage] = useState<Stage>("form");
 
 	const form = useForm({ shouldUnregister: false });
@@ -30,14 +27,14 @@ export default function YTImportModal(props: Props) {
 
 	function onClose() {
 		setStage("form");
-		props.onClose();
+		toggleImportingFromYouTube(false);
 	}
 
 	return (
-		<Dialog.Root open={props.open} onOpenChange={onClose}>
+		<Dialog.Root open={store.isImportingFromYouTube} onOpenChange={onClose}>
 			<Dialog.Content maxWidth="400px">
 				<Show when={stage === "form" || mutation.data == null}>
-					<ImportForm open={props.open} onSubmit={(data) => mutation.mutate(data.url)} submitting={mutation.isPending} form={form} />
+					<ImportForm onSubmit={(data) => mutation.mutate(data.url)} submitting={mutation.isPending} form={form} />
 				</Show>
 
 				<Show when={stage === "overview" && mutation.data != null}>

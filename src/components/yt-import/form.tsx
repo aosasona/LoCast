@@ -6,9 +6,10 @@ import YouTubeSource from "$/lib/sources/youtube";
 import { readText } from "@tauri-apps/plugin-clipboard-manager";
 import { Clipboard } from "@phosphor-icons/react";
 import { presentError } from "$/lib/error";
+import { subscribe } from "valtio";
+import { importStore } from "$/lib/stores/import";
 
 type Props = {
-	open: boolean;
 	form: UseFormReturn<FieldValues>;
 	submitting: boolean;
 	onSubmit: SubmitHandler<FieldValues>;
@@ -22,8 +23,14 @@ export default function ImportForm(props: Props) {
 	} = props.form;
 
 	useEffect(() => {
-		reset();
-	}, [props.open]);
+		const unsubscribe = subscribe(importStore, () => {
+			if (!importStore.isImportingFromYouTube) {
+				reset();
+			}
+		});
+
+		return unsubscribe;
+	}, []);
 
 	function pasteFromClipboard() {
 		readText()

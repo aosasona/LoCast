@@ -1,13 +1,9 @@
 import { memo } from "react";
-import { Gear, House, Icon, Plus } from "@phosphor-icons/react";
+import { DownloadSimple, Gear, House, Icon, Plus, TrayArrowDown } from "@phosphor-icons/react";
 import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import { useMemo } from "react";
 import Show from "../show";
 import { useNavigate } from "@tanstack/react-router";
-
-type Props = {
-	handleOpenYtImportModal: () => void;
-};
 
 type Tab = {
 	icon: Icon;
@@ -16,7 +12,7 @@ type Tab = {
 	onClick: () => void;
 };
 
-function TabBar(props: Props) {
+function TabBar() {
 	const navigate = useNavigate();
 
 	const tabs = useMemo<Tab[]>(
@@ -24,19 +20,19 @@ function TabBar(props: Props) {
 			{
 				icon: House,
 				title: "Home",
-				size: 20,
+				size: 22,
 				onClick: () => navigate({ to: "/" }),
 			},
 			{
-				icon: Plus,
-				title: "Import",
-				size: 18,
-				onClick: props.handleOpenYtImportModal,
+				icon: DownloadSimple,
+				title: "Downloads",
+				size: 24,
+				onClick: () => {},
 			},
 			{
 				icon: Gear,
 				title: "Settings",
-				size: 20,
+				size: 22,
 				onClick: () => {}, // TODO: implement settings page
 			},
 		],
@@ -44,10 +40,10 @@ function TabBar(props: Props) {
 	);
 
 	return (
-		<Box display={{ sm: "none" }} width="100dvw" position="fixed" bottom="0" className="pb-safe-bottom">
-			<Flex width="100%" align="center" p="4" className="bg-gray-100 justify-evenly">
+		<Box display={{ sm: "none" }} width="100dvw" position="fixed" bottom="0" className="z-[999999] border-t border-t-gray">
+			<Flex width="100%" align="center" px="4" py="2" className="bg-gray-50/75 backdrop-blur-lg justify-evenly pb-safe-bottom">
 				{tabs.map(({ icon: TabIcon, title, onClick, size }) => (
-					<Button variant="ghost" color="gray" onClick={onClick}>
+					<Button variant="ghost" color="gray" onClick={onClick} radius="large">
 						<Flex direction="column" align="center" gap="1" p="1">
 							<TabIcon size={size || 16} />
 							<Show when={!!title}>

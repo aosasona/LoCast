@@ -4,12 +4,9 @@ import { CaretRight, CaretLeft, SidebarSimple, Plus } from "@phosphor-icons/reac
 import { useHotkeys } from "react-hotkeys-hook";
 import Show from "@ui/show";
 import { toast } from "sonner";
+import { toggleImportingFromYouTube } from "$/lib/stores/import";
 
-type Props = {
-	handleOpenYtImportModal: () => void;
-};
-
-function Sidebar(props: Props) {
+function Sidebar() {
 	const [collapseSidebar, setCollapseSidebar] = useState(false);
 
 	useHotkeys(["ctrl+s", "meta+s"], () => setCollapseSidebar(!collapseSidebar));
@@ -26,7 +23,15 @@ function Sidebar(props: Props) {
 
 	return (
 		<Box display={{ initial: "none", sm: "block" }}>
-			<Flex direction="column" width={collapseSidebar ? "60px" : "240px"} p="2" className="h-full transition-all">
+			<Flex
+				direction="column"
+				minWidth="60px"
+				width={{
+					sm: collapseSidebar ? "60px" : "21vw",
+					xl: collapseSidebar ? "60px" : "250px",
+				}}
+				p={{ sm: "3", lg: "2" }}
+				className="h-full transition-all">
 				<Box className="h-full bg-gray-100 rounded-md" p="3">
 					<Flex direction="column" gap="3" align={collapseSidebar ? "center" : "start"} justify="center">
 						<Flex align="center" justify={collapseSidebar ? "center" : "between"} gap="1" width="100%" mb="2">
@@ -68,7 +73,7 @@ function Sidebar(props: Props) {
 								</DropdownMenu.Trigger>
 							</Show>
 							<DropdownMenu.Content>
-								<DropdownMenu.Item shortcut="⌘ i" onClick={props.handleOpenYtImportModal}>
+								<DropdownMenu.Item shortcut="⌘ i" onClick={() => toggleImportingFromYouTube(true)}>
 									YouTube
 								</DropdownMenu.Item>
 							</DropdownMenu.Content>
