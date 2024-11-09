@@ -13,6 +13,7 @@
 	"app": {
 		"windows": [
 			{
+				"label": "main",
 				"title": "LoCast",
 				"width": 1200,
 				"height": 720,
