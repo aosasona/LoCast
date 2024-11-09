@@ -1,20 +1,17 @@
 import type { PropsWithChildren } from "react";
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Flex, ScrollArea } from "@radix-ui/themes";
 
 import YTImportModal from "@ui/yt-import";
 import { useHotkeys } from "react-hotkeys-hook";
 import Sidebar from "./sidebar";
-import { TabBar } from "./tabbar";
-import { Window } from "@tauri-apps/api/window";
+import TabBar from "./tabbar";
+import Header from "./header";
 
 type Props = PropsWithChildren<{}>;
 
-const appWindow = Window.getCurrent();
-
 export default function Layout({ children }: Props) {
 	const [openYTImportModal, setOpenYtImportModal] = useState(false);
-	const [isMaximized, setIsMaximized] = useState(false);
 
 	// Disable right-click context menu and selection
 	useEffect(() => {
@@ -49,27 +46,12 @@ export default function Layout({ children }: Props) {
 		};
 	}, []);
 
-	// Handle window resize
-	useEffect(() => {
-		const unlisten = (async () => {
-			const unlisten = await appWindow.onResized(async (_) => {
-				const isFullscreen = await appWindow.isFullscreen();
-				setIsMaximized(isFullscreen);
-			});
-
-			return unlisten;
-		})().then((unlisten) => unlisten);
-
-		return () => {
-			unlisten.then((unlisten) => unlisten());
-		};
-	}, []);
-
 	useHotkeys(["meta+i", "ctrl+i"], () => setOpenYtImportModal(true));
 
 	return (
 		<Flex direction="column" height="100dvh" width="100dvw">
-			<Box display={{ initial: "none", sm: "block" }} width="100%" height={isMaximized ? "0px" : "20px"} data-tauri-drag-region />
+			<Header />
+
 			<Flex direction={{ initial: "column", sm: "row" }} overflowY="hidden" width="100%" height="100%" maxHeight="100dvh">
 				<Sidebar handleOpenYtImportModal={() => setOpenYtImportModal(true)} />
 
@@ -83,6 +65,7 @@ export default function Layout({ children }: Props) {
 
 				<TabBar handleOpenYtImportModal={() => setOpenYtImportModal(true)} />
 			</Flex>
+
 			<YTImportModal open={openYTImportModal} onClose={() => setOpenYtImportModal(false)} onOpen={() => setOpenYtImportModal(true)} />
 		</Flex>
 	);

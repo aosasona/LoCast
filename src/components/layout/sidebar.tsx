@@ -1,15 +1,15 @@
+import { useState, memo } from "react";
 import { Box, Button, DropdownMenu, Flex, IconButton, Tooltip } from "@radix-ui/themes";
 import { CaretRight, CaretLeft, SidebarSimple, Plus } from "@phosphor-icons/react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Show from "@ui/show";
 import { toast } from "sonner";
-import { useState } from "react";
 
 type Props = {
 	handleOpenYtImportModal: () => void;
 };
 
-export default function Sidebar(props: Props) {
+function Sidebar(props: Props) {
 	const [collapseSidebar, setCollapseSidebar] = useState(false);
 
 	useHotkeys(["ctrl+s", "meta+s"], () => setCollapseSidebar(!collapseSidebar));
@@ -79,3 +79,5 @@ export default function Sidebar(props: Props) {
 		</Box>
 	);
 }
+
+export default memo(Sidebar);

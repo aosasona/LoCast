@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Gear, House, Icon, Plus } from "@phosphor-icons/react";
 import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import { useMemo } from "react";
@@ -15,7 +16,7 @@ type Tab = {
 	onClick: () => void;
 };
 
-export function TabBar(props: Props) {
+function TabBar(props: Props) {
 	const navigate = useNavigate();
 
 	const tabs = useMemo<Tab[]>(
@@ -41,6 +42,7 @@ export function TabBar(props: Props) {
 		],
 		[]
 	);
+
 	return (
 		<Box display={{ sm: "none" }} width="100dvw" position="fixed" bottom="0" className="pb-safe-bottom">
 			<Flex width="100%" align="center" p="4" className="bg-gray-100 justify-evenly">
@@ -58,3 +60,5 @@ export function TabBar(props: Props) {
 		</Box>
 	);
 }
+
+export default memo(TabBar);
