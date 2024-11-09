@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { DownloadSimple, Gear, House, Icon, Plus, TrayArrowDown } from "@phosphor-icons/react";
+import { DownloadSimple, Gear, House, Icon } from "@phosphor-icons/react";
 import { Box, Button, Flex, Text } from "@radix-ui/themes";
 import { useMemo } from "react";
 import Show from "../show";
@@ -40,8 +40,15 @@ function TabBar() {
 	);
 
 	return (
-		<Box display={{ sm: "none" }} width="100dvw" position="fixed" bottom="0" className="z-[999999] border-t border-t-gray">
-			<Flex width="100%" align="center" px="4" py="2" className="bg-gray-50/75 backdrop-blur-lg justify-evenly pb-safe-bottom">
+		<Box
+			display={{ sm: "none" }}
+			width="100vw"
+			position="fixed"
+			bottom="0"
+			left="0"
+			right="0"
+			className="z-[999999] border-t border-t-gray bg-gray-50/80 backdrop-blur-lg tab-bar-padding">
+			<Flex width="100%" align="center" px="4" className="justify-around">
 				{tabs.map(({ icon: TabIcon, title, onClick, size }) => (
 					<Button variant="ghost" color="gray" onClick={onClick} radius="large">
 						<Flex direction="column" align="center" gap="1" p="1">

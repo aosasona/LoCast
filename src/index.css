@@ -32,3 +32,11 @@
 body {
 	@apply select-none;
 }
+
+.tab-bar-padding {
+	--padding-size: 1rem;
+
+	/** Add padding to the bottom of the page if and only if the safe area is lesser than 0.75rem */
+	padding-bottom: max(env(safe-area-inset-bottom), var(--padding-size));
+	padding-top: var(--padding-size);
+}

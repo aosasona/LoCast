@@ -5,8 +5,8 @@ import { MagnifyingGlass, Plus } from "@phosphor-icons/react";
 
 export default function TopBar() {
 	return (
-		<Box display={{ sm: "none" }} className="pt-safe-top bg-gray-50 sm:bg-gray-100 border-b border-b-gray" py="3">
-			<Flex align="center" justify="between" px="4">
+		<Box display={{ sm: "none" }} className="pt-safe-top bg-gray-50 sm:bg-gray-100 border-b border-b-gray">
+			<Flex align="center" justify="between" px="4" py="3">
 				<img src={lightLogo} alt="Logo" className="h-9" />
 
 				<Flex gap="6">
