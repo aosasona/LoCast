@@ -1,5 +1,4 @@
-import { commands, VideoDetails } from "../bindings";
-import { presentError, YouTubeError } from "../error";
+import { YouTubeError } from "../error";
 
 // TODO: create a generic source class that all sources will extend in the future
 class YouTubeSource {
