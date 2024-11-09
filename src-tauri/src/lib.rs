@@ -6,11 +6,10 @@ mod sources;
 mod types;
 
 use cache::DbCache;
-use sources::{types::VideoImportEvent, youtube};
-use specta_typescript::Typescript;
+use sources::youtube;
+use specta::export::{self, ts};
 use std::sync::Arc;
 use tauri::AppHandle;
-use tauri_specta::{collect_commands, collect_events, Builder};
 
 async fn setup<T: tauri::Runtime>(manager: &impl tauri::Manager<T>, app: &AppHandle) {
     let db_pool = match database::make_pool().await {
@@ -36,23 +35,16 @@ async fn setup<T: tauri::Runtime>(manager: &impl tauri::Manager<T>, app: &AppHan
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let builder = Builder::<tauri::Wry>::new()
-        .commands(collect_commands![
-            youtube::import_video,
-            youtube::get_video_info,
-        ])
-        .events(collect_events![VideoImportEvent]);
-
-    #[cfg(target_os = "macos")]
-    builder
-        .export(Typescript::default(), "../src/lib/bindings.ts")
-        .expect("Failed to export typescript bindings");
+    #[cfg(debug_assertions)]
+    #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
+    export::ts("../src/lib/tauri/types.ts").expect("Failed to export typescript types");
 
     tauri::Builder::default()
-        .invoke_handler(builder.invoke_handler())
+        .invoke_handler(tauri::generate_handler![
+            youtube::get_video_info,
+            youtube::import_video
+        ])
         .setup(move |app| {
-            builder.mount_events(app);
-
             tauri::async_runtime::block_on(async move {
                 setup(app, app.handle()).await;
             });

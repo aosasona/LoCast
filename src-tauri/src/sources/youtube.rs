@@ -5,7 +5,6 @@ use super::types::{Author, Thumbnail, ThumbnailSet, VideoDetails};
 use crate::{cache::Key, queries::types::Action, types::AppState};
 
 #[tauri::command]
-#[specta::specta]
 pub async fn get_video_info(id: &str, state: State<'_, AppState>) -> Result<VideoDetails, String> {
     let video = Video::new(id).map_err(|e| {
         log::error!("error while fetching video: {}", e);
@@ -68,7 +67,6 @@ pub async fn get_video_info(id: &str, state: State<'_, AppState>) -> Result<Vide
 // Videos are only really imported after they have been processed by the job manager, so here we
 // just add the video to the job queue
 #[tauri::command]
-#[specta::specta]
 pub async fn import_video(state: State<'_, AppState>, details: VideoDetails) -> Result<(), String> {
     let serialized_meta = serde_json::to_value(details).map_err(|e| e.to_string())?;
 

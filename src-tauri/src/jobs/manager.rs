@@ -1,8 +1,7 @@
 use chrono::Utc;
 use sqlx::{Pool, Sqlite, SqlitePool};
 use std::{cmp::max, collections::VecDeque, ops::Deref, sync::Arc, thread::available_parallelism};
-use tauri::AppHandle;
-use tauri_specta::Event as _;
+use tauri::{AppHandle, Emitter as _};
 
 use crate::{
     queries::{
@@ -167,15 +166,17 @@ impl Manager {
 
         let created_job = self.create_job(&job).await?;
 
-        VideoImportEvent {
-            job_id: created_job.id as i32,
-            title: meta.title,
-            author_name: meta.author.as_ref().unwrap().name.clone(),
-            duration_in_seconds: duration_in_seconds as i32,
-            status: JobStatus::Queued,
-            created_at: Utc::now().timestamp() as i32,
-        }
-        .emit(&self.app)?;
+        self.app.emit(
+            "video-import",
+            VideoImportEvent {
+                job_id: created_job.id as i32,
+                title: meta.title,
+                author_name: meta.author.as_ref().unwrap().name.clone(),
+                duration_in_seconds: duration_in_seconds as i32,
+                status: JobStatus::Queued,
+                created_at: Utc::now().timestamp() as i32,
+            },
+        )?;
 
         Ok(created_job)
     }

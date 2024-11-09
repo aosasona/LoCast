@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use specta::Type;
-use tauri_specta::Event;
 
 #[derive(Clone, Debug, Serialize, Deserialize, Type, sqlx::Type)]
 #[sqlx(rename_all = "snake_case")]
@@ -70,7 +69,7 @@ pub struct VideoDetails {
     pub publish_date: String,
 }
 
-#[derive(Serialize, Deserialize, Clone, Type, Event)]
+#[derive(Serialize, Deserialize, Clone, Type)]
 pub struct VideoImportEvent {
     pub job_id: i32,
     pub title: String,
