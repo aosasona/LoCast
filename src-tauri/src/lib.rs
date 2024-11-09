@@ -43,7 +43,7 @@ pub fn run() {
         ])
         .events(collect_events![VideoImportEvent]);
 
-    #[cfg(debug_assertions)]
+    #[cfg(target_os = "macos")]
     builder
         .export(Typescript::default(), "../src/lib/bindings.ts")
         .expect("Failed to export typescript bindings");
@@ -62,7 +62,6 @@ pub fn run() {
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_fs::init())
-        .plugin(tauri_plugin_sql::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_prevent_default::init())
         .plugin(tauri_plugin_log::Builder::new().build())
