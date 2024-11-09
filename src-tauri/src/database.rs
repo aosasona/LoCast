@@ -115,5 +115,17 @@ pub(crate) fn get_migrations() -> Vec<Migration> {
             sql: "ALTER TABLE items DROP COLUMN source_url;",
             kind: MigrationKind::Up,
         },
+        Migration {
+            version: 10,
+            description: "unique_asset_id_constraint_items",
+            sql: "CREATE UNIQUE INDEX uk_asset_id_items ON items(asset_id);",
+            kind: MigrationKind::Up,
+        },
+        Migration {
+            version: 11,
+            description: "unique_asset_id_constraint_authors",
+            sql: "CREATE UNIQUE INDEX uk_asset_id_authors ON authors(asset_id);",
+            kind: MigrationKind::Up,
+        },
     ]
 }
