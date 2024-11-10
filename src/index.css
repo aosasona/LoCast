@@ -14,23 +14,22 @@
 	font-size: 14px;
 	line-height: 1.5;
 	font-weight: 400;
-
-	/* color-scheme: dark; */
-	/* color: hsl(var(--color-body)); */
-	/* background-color: hsl(var(--color-dark)); */
-
-	/* font-synthesis: none; */
-	/* text-rendering: optimizeLegibility; */
-	/* -webkit-font-smoothing: antialiased; */
-	/* -moz-osx-font-smoothing: grayscale; */
 }
 
 /* * { */
 /* 	@apply border border-red-600; */
 /* } */
 
+html {
+	@apply overscroll-none;
+}
+
 body {
-	@apply select-none;
+	@apply select-none cursor-default overflow-hidden;
+}
+
+button {
+	cursor: pointer;
 }
 
 .tab-bar-padding {

@@ -11,7 +11,6 @@ import { importStore, toggleImportingFromYouTube } from "$/lib/stores/import";
 import { useSnapshot } from "valtio";
 
 type Stage = "form" | "overview";
-
 export default function YTImportModal() {
 	const store = useSnapshot(importStore);
 	const [stage, setStage] = useState<Stage>("form");
@@ -23,6 +22,7 @@ export default function YTImportModal() {
 		mutationFn: YouTubeSource.loadVideoInfo,
 		onSuccess: (_) => setStage("overview"),
 		onError: (error) => toast.error(error.message),
+		retry: false,
 	});
 
 	function onClose() {
@@ -34,7 +34,11 @@ export default function YTImportModal() {
 		<Dialog.Root open={store.isImportingFromYouTube} onOpenChange={onClose}>
 			<Dialog.Content maxWidth="400px">
 				<Show when={stage === "form" || mutation.data == null}>
-					<ImportForm onSubmit={(data) => mutation.mutate(data.url)} submitting={mutation.isPending} form={form} />
+					<ImportForm
+						onSubmit={(data) => mutation.mutate(data.url)}
+						submitting={mutation.isPending}
+						form={form}
+					/>
 				</Show>
 
 				<Show when={stage === "overview" && mutation.data != null}>

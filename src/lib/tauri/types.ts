@@ -12,5 +12,7 @@ export type Thumbnail = { url: string; width: number; height: number }
 
 export type JobStatus = "queued" | "in_progress" | "completed" | "failed" | "cancelled"
 
+export type YoutubeError = "VideoNotFound" | "VideoFetchError" | "InvalidVideoDetailsProvided" | "FailedToEnqueueJob"
+
 export type ThumbnailSet = { small: Thumbnail; medium: Thumbnail; standard: Thumbnail }
 

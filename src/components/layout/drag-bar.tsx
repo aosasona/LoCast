@@ -6,7 +6,7 @@ import { Window } from "@tauri-apps/api/window";
 
 const appWindow = Window.getCurrent();
 
-function Header() {
+function DragBar() {
 	const [isMaximized, setIsMaximized] = useState(false);
 
 	// Handle window resize
@@ -28,4 +28,4 @@ function Header() {
 	return <Box display={{ initial: "none", sm: "block" }} width="100%" height={isMaximized ? "0px" : "20px"} data-tauri-drag-region />;
 }
 
-export default React.memo(Header);
+export default React.memo(DragBar);

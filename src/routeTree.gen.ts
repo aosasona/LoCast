@@ -16,10 +16,17 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
+const SettingsLazyImport = createFileRoute('/settings')()
 const PreviewLazyImport = createFileRoute('/preview')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
+
+const SettingsLazyRoute = SettingsLazyImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/settings.lazy').then((d) => d.Route))
 
 const PreviewLazyRoute = PreviewLazyImport.update({
   id: '/preview',
@@ -51,6 +58,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PreviewLazyImport
       parentRoute: typeof rootRoute
     }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -59,36 +73,41 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/preview': typeof PreviewLazyRoute
+  '/settings': typeof SettingsLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/preview': typeof PreviewLazyRoute
+  '/settings': typeof SettingsLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/preview': typeof PreviewLazyRoute
+  '/settings': typeof SettingsLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/preview'
+  fullPaths: '/' | '/preview' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/preview'
-  id: '__root__' | '/' | '/preview'
+  to: '/' | '/preview' | '/settings'
+  id: '__root__' | '/' | '/preview' | '/settings'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   PreviewLazyRoute: typeof PreviewLazyRoute
+  SettingsLazyRoute: typeof SettingsLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   PreviewLazyRoute: PreviewLazyRoute,
+  SettingsLazyRoute: SettingsLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -104,7 +123,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/preview"
+        "/preview",
+        "/settings"
       ]
     },
     "/": {
@@ -112,6 +132,9 @@ export const routeTree = rootRoute
     },
     "/preview": {
       "filePath": "preview.lazy.tsx"
+    },
+    "/settings": {
+      "filePath": "settings.lazy.tsx"
     }
   }
 }

@@ -33,10 +33,10 @@ function TabBar() {
 				icon: Gear,
 				title: "Settings",
 				size: 22,
-				onClick: () => {}, // TODO: implement settings page
+				onClick: () => navigate({ to: "/settings" }),
 			},
 		],
-		[]
+		[],
 	);
 
 	return (
@@ -47,14 +47,17 @@ function TabBar() {
 			bottom="0"
 			left="0"
 			right="0"
-			className="z-[999999] border-t border-t-gray bg-gray-50/80 backdrop-blur-lg tab-bar-padding">
+			className="z-[999999] border-t border-t-gray bg-gray-50/80 backdrop-blur-lg tab-bar-padding"
+		>
 			<Flex width="100%" align="center" px="4" className="justify-around">
 				{tabs.map(({ icon: TabIcon, title, onClick, size }) => (
 					<Button variant="ghost" color="gray" onClick={onClick} radius="large">
 						<Flex direction="column" align="center" gap="1" p="1">
 							<TabIcon size={size || 16} />
 							<Show when={!!title}>
-								<Text className="text-white text-xs">{title}</Text>
+								<Text color="gray" className="text-xs">
+									{title}
+								</Text>
 							</Show>
 						</Flex>
 					</Button>

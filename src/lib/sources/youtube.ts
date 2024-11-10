@@ -1,4 +1,6 @@
 import { YouTubeError } from "../error";
+import { commands } from "@lib/tauri";
+import { VideoDetails } from "../tauri/types";
 
 // TODO: create a generic source class that all sources will extend in the future
 class YouTubeSource {
@@ -33,7 +35,9 @@ class YouTubeSource {
 		}
 
 		// Remove empty matches
-		const filteredMatches = matches.filter((match) => match !== undefined && match !== null && match !== "");
+		const filteredMatches = matches.filter(
+			(match) => match !== undefined && match !== null && match !== "",
+		);
 
 		const id = String(filteredMatches[filteredMatches.length - 1]);
 		if (!id) {
