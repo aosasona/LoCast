@@ -1,12 +1,14 @@
 import { useState, memo } from "react";
-import { Box, Button, DropdownMenu, Flex, IconButton, Tooltip } from "@radix-ui/themes";
-import { CaretRight, CaretLeft, SidebarSimple, Plus } from "@phosphor-icons/react";
+import { Box, Button, DropdownMenu, Flex, IconButton, Separator, Tooltip } from "@radix-ui/themes";
+import { CaretRight, CaretLeft, SidebarSimple, Plus, Gear, Code } from "@phosphor-icons/react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Show from "@ui/show";
 import { toast } from "sonner";
 import { toggleImportingFromYouTube } from "$/lib/stores/import";
+import { useNavigate } from "@tanstack/react-router";
 
 function Sidebar() {
+	const navigate = useNavigate();
 	const [collapseSidebar, setCollapseSidebar] = useState(false);
 
 	useHotkeys(["ctrl+s", "meta+s"], () => setCollapseSidebar(!collapseSidebar));
@@ -23,8 +25,7 @@ function Sidebar() {
 
 	return (
 		<Box display={{ initial: "none", sm: "block" }}>
-			<Flex
-				direction="column"
+			<Box
 				minWidth="60px"
 				width={{
 					sm: collapseSidebar ? "60px" : "21vw",
@@ -32,55 +33,74 @@ function Sidebar() {
 				}}
 				p={{ sm: "3", lg: "2" }}
 				className="h-full transition-all">
-				<Box className="h-full bg-gray-100 rounded-md" p="3">
-					<Flex direction="column" gap="3" align={collapseSidebar ? "center" : "start"} justify="center">
-						<Flex align="center" justify={collapseSidebar ? "center" : "between"} gap="1" width="100%" mb="2">
-							<Tooltip content={`${collapseSidebar ? "Expand" : "Collapse"} sidebar ⌘ s`}>
-								<IconButton variant="ghost" size="2" onClick={() => setCollapseSidebar(!collapseSidebar)}>
-									<SidebarSimple size={20} />
+				<Flex direction="column" height="100%" className="bg-gray-100 rounded-md">
+					<Box className="h-full" p="3">
+						<Flex direction="column" gap="3" align={collapseSidebar ? "center" : "start"} justify="center">
+							<Flex align="center" justify={collapseSidebar ? "center" : "between"} gap="1" width="100%" mb="2">
+								<Tooltip content={`${collapseSidebar ? "Expand" : "Collapse"} sidebar ⌘ s`}>
+									<IconButton variant="ghost" size="2" onClick={() => setCollapseSidebar(!collapseSidebar)}>
+										<SidebarSimple size={20} />
+									</IconButton>
+								</Tooltip>
+
+								<Flex gap="4" display={collapseSidebar ? "none" : "flex"} hidden={collapseSidebar} className="transition-all">
+									<Tooltip content="Go back ⌘ ←">
+										<IconButton size="2" variant="ghost" onClick={goBack}>
+											<CaretLeft />
+										</IconButton>
+									</Tooltip>
+									<Tooltip content="Go forward ⌘ →">
+										<IconButton size="2" variant="ghost" onClick={goForward}>
+											<CaretRight />
+										</IconButton>
+									</Tooltip>
+								</Flex>
+							</Flex>
+
+							<DropdownMenu.Root>
+								<Show when={!collapseSidebar}>
+									<DropdownMenu.Trigger>
+										<Button className="w-full">
+											Add to library
+											<Plus />
+										</Button>
+									</DropdownMenu.Trigger>
+								</Show>
+
+								<Show when={collapseSidebar}>
+									<DropdownMenu.Trigger>
+										<IconButton variant="ghost" size="2">
+											<Plus />
+										</IconButton>
+									</DropdownMenu.Trigger>
+								</Show>
+								<DropdownMenu.Content>
+									<DropdownMenu.Item shortcut="⌘ i" onClick={() => toggleImportingFromYouTube(true)}>
+										YouTube
+									</DropdownMenu.Item>
+								</DropdownMenu.Content>
+							</DropdownMenu.Root>
+						</Flex>
+					</Box>
+
+					<Separator size="4" mt="auto" />
+					<Flex width="100%" direction="row" gap="3" align="center" justify="between" p="3">
+						<Tooltip content="Settings">
+							<IconButton variant="ghost" size="2" onClick={() => navigate({ to: "/settings" })}>
+								<Gear size={18} />
+							</IconButton>
+						</Tooltip>
+
+						<Show when={import.meta.env.DEV}>
+							<Tooltip content="Dev area">
+								<IconButton variant="ghost" onClick={() => navigate({ to: "/preview" })}>
+									<Code size={18} />
 								</IconButton>
 							</Tooltip>
-
-							<Flex gap="4" display={collapseSidebar ? "none" : "flex"} hidden={collapseSidebar} className="transition-all">
-								<Tooltip content="Go back ⌘ ←">
-									<IconButton size="2" variant="ghost" onClick={goBack}>
-										<CaretLeft />
-									</IconButton>
-								</Tooltip>
-								<Tooltip content="Go forward ⌘ →">
-									<IconButton size="2" variant="ghost" onClick={goForward}>
-										<CaretRight />
-									</IconButton>
-								</Tooltip>
-							</Flex>
-						</Flex>
-
-						<DropdownMenu.Root>
-							<Show when={!collapseSidebar}>
-								<DropdownMenu.Trigger>
-									<Button className="w-full">
-										Add to library
-										<Plus />
-									</Button>
-								</DropdownMenu.Trigger>
-							</Show>
-
-							<Show when={collapseSidebar}>
-								<DropdownMenu.Trigger>
-									<IconButton variant="ghost" size="2">
-										<Plus />
-									</IconButton>
-								</DropdownMenu.Trigger>
-							</Show>
-							<DropdownMenu.Content>
-								<DropdownMenu.Item shortcut="⌘ i" onClick={() => toggleImportingFromYouTube(true)}>
-									YouTube
-								</DropdownMenu.Item>
-							</DropdownMenu.Content>
-						</DropdownMenu.Root>
+						</Show>
 					</Flex>
-				</Box>
-			</Flex>
+				</Flex>
+			</Box>
 		</Box>
 	);
 }
