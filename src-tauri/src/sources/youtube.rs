@@ -1,14 +1,43 @@
 use rusty_ytdl::Video;
 use tauri::State;
+use thiserror::Error;
 
 use super::types::{Author, Thumbnail, ThumbnailSet, VideoDetails};
-use crate::{cache::Key, queries::types::Action, types::AppState};
+use crate::{cache::Key, queries::types::Action, AppState};
+
+#[derive(Error, Debug, specta::Type)]
+pub enum YoutubeError {
+    #[error("video not found")]
+    VideoNotFound,
+
+    #[error("failed to fetch video")]
+    VideoFetchError,
+
+    #[error("invalid video details provided")]
+    InvalidVideoDetailsProvided,
+
+    #[error("failed to import video: unable to enqueue job")]
+    FailedToEnqueueJob,
+}
+
+impl serde::Serialize for YoutubeError {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        format!("{}", self).serialize(serializer)
+    }
+}
 
 #[tauri::command]
-pub async fn get_video_info(id: &str, state: State<'_, AppState>) -> Result<VideoDetails, String> {
+pub async fn get_video_info(
+    state: State<'_, AppState>,
+    id: &str,
+) -> Result<VideoDetails, YoutubeError> {
+    // let state = state.lock().await;
     let video = Video::new(id).map_err(|e| {
         log::error!("error while fetching video: {}", e);
-        String::from("Failed to fetch video")
+        YoutubeError::VideoFetchError
     })?;
 
     if let Some(info) = state
@@ -25,7 +54,7 @@ pub async fn get_video_info(id: &str, state: State<'_, AppState>) -> Result<Vide
         .await
         .map_err(|e| {
             log::error!("error while fetching video info: {}", e);
-            e.to_string()
+            YoutubeError::VideoFetchError
         })?
         .video_details;
 
@@ -67,14 +96,23 @@ pub async fn get_video_info(id: &str, state: State<'_, AppState>) -> Result<Vide
 // Videos are only really imported after they have been processed by the job manager, so here we
 // just add the video to the job queue
 #[tauri::command]
-pub async fn import_video(state: State<'_, AppState>, details: VideoDetails) -> Result<(), String> {
-    let serialized_meta = serde_json::to_value(details).map_err(|e| e.to_string())?;
+pub async fn import_video(
+    state: State<'_, AppState>,
+    details: VideoDetails,
+) -> Result<(), YoutubeError> {
+    let serialized_meta = serde_json::to_value(details).map_err(|e| {
+        log::error!("failed to serialize video details: {}", e);
+        YoutubeError::InvalidVideoDetailsProvided
+    })?;
 
     state
         .job_manager
         .enqueue(Action::ImportYtVideo, Some(serialized_meta))
         .await
-        .map_err(|e| e.to_string())?;
+        .map_err(|e| {
+            log::error!("failed to enqueue video import job: {}", e);
+            YoutubeError::FailedToEnqueueJob
+        })?;
 
     Ok(())
 }

@@ -44,3 +44,4 @@ chrono = { version = "0.4.38", features = ["serde"] }
 anyhow = "1.0.91"
 tauri-plugin-clipboard-manager = "2.0.1"
 specta = { version = "1.0.5", features = ["chrono", "export"] }
+thiserror = "2.0.1"
