@@ -2,6 +2,7 @@ use sqlx::sqlite::SqlitePool;
 use tauri_plugin_sql::{Migration, MigrationKind};
 
 pub async fn make_pool() -> Result<SqlitePool, String> {
+    log::info!("Initializing database pool");
     SqlitePool::connect("sqlite:locast.db")
         .await
         .map_err(|e| e.to_string())

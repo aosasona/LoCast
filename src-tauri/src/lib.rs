@@ -29,7 +29,7 @@ async fn setup(app: &AppHandle) {
 
     let arc_pool = Arc::new(db_pool);
 
-    let job_manager = Arc::new(jobs::Manager::new(arc_pool.clone(), app.clone()));
+    let job_manager = Arc::new(jobs::Manager::new(arc_pool.clone()));
 
     let app_state = AppState {
         job_manager: Arc::clone(&job_manager),
@@ -48,29 +48,7 @@ pub fn run() {
     #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
     export::ts("../src/lib/tauri/types.ts").expect("Failed to export typescript types");
 
-    // let state = tokio::runtime::Runtime::new().unwrap().block_on(async {
-    //     let db_pool = match database::make_pool().await {
-    //         Ok(pool) => pool,
-    //         Err(e) => {
-    //             log::error!("Failed to initialize database pool: {}", e);
-    //             panic!("Failed to initialize database pool");
-    //         }
-    //     };
-    //
-    //     let arc_pool = Arc::new(db_pool);
-    //
-    //     let job_manager = Arc::new(jobs::Manager::new(arc_pool.clone()));
-    //
-    //     AppState {
-    //         job_manager: Arc::clone(&job_manager),
-    //         cache: DbCache::new(Arc::clone(&arc_pool)),
-    //         db_pool: Arc::clone(&arc_pool),
-    //         queries: queries::Queries::new(Arc::clone(&arc_pool)),
-    //     }
-    // });
-
     tauri::Builder::default()
-        // .manage(state)
         .setup(|app| {
             tauri::async_runtime::block_on(async move {
                 setup(app.handle()).await;
