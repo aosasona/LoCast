@@ -2,8 +2,9 @@ use rusty_ytdl::Video;
 use tauri::State;
 use thiserror::Error;
 
-use super::types::{Author, Thumbnail, ThumbnailSet, VideoDetails};
+use super::types::{Author, Thumbnail, ThumbnailSet, VideoDetails, VideoImportEvent};
 use crate::{cache::Key, queries::types::Action, AppState};
+use tauri::{AppHandle, Emitter as _};
 
 #[derive(Error, Debug, specta::Type)]
 pub enum YoutubeError {
@@ -97,15 +98,16 @@ pub async fn get_video_info(
 // just add the video to the job queue
 #[tauri::command]
 pub async fn import_video(
+    app: tauri::AppHandle,
     state: State<'_, AppState>,
     details: VideoDetails,
 ) -> Result<(), YoutubeError> {
-    let serialized_meta = serde_json::to_value(details).map_err(|e| {
+    let serialized_meta = serde_json::to_value(&details).map_err(|e| {
         log::error!("failed to serialize video details: {}", e);
         YoutubeError::InvalidVideoDetailsProvided
     })?;
 
-    state
+    let job = state
         .job_manager
         .enqueue(Action::ImportYtVideo, Some(serialized_meta))
         .await
@@ -113,6 +115,21 @@ pub async fn import_video(
             log::error!("failed to enqueue video import job: {}", e);
             YoutubeError::FailedToEnqueueJob
         })?;
+
+    let duration = details.duration_in_seconds.parse::<i32>().unwrap_or(0);
+    if let Err(e) = app.emit(
+        "video-import",
+        VideoImportEvent {
+            job_id: job.id as i32,
+            title: details.title,
+            author: details.author,
+            duration_in_seconds: duration,
+            status: crate::queries::types::JobStatus::Queued,
+            created_at: chrono::Utc::now().timestamp() as i32,
+        },
+    ) {
+        log::error!("failed to emit video import event: {}", e);
+    }
 
     Ok(())
 }

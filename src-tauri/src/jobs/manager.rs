@@ -1,7 +1,5 @@
-use chrono::Utc;
 use sqlx::{Pool, Sqlite, SqlitePool};
 use std::{cmp::max, collections::VecDeque, ops::Deref, sync::Arc, thread::available_parallelism};
-use tauri::{AppHandle, Emitter as _};
 
 use crate::{
     queries::{
@@ -17,7 +15,6 @@ use crate::{
 pub struct Manager {
     max_concurrent_jobs: u8,
 
-    // app: AppHandle,
     db_pool: Arc<SqlitePool>,
     queries: Queries,
 
@@ -46,10 +43,7 @@ macro_rules! in_queue {
 
 // TODO: emit children events for things like authors
 impl Manager {
-    pub fn new(
-        db_pool: Arc<Pool<Sqlite>>,
-        // app: AppHandle
-    ) -> Self {
+    pub fn new(db_pool: Arc<Pool<Sqlite>>) -> Self {
         log::info!("Initializing job manager");
 
         let queries = Queries::new(Arc::clone(&db_pool));
@@ -60,7 +54,6 @@ impl Manager {
 
         Self {
             max_concurrent_jobs: max_concurrent_jobs as u8,
-            // app,
             db_pool,
             queries,
             queue: VecDeque::new(),
@@ -170,18 +163,6 @@ impl Manager {
         };
 
         let created_job = self.create_job(&job).await?;
-
-        // self.app.emit(
-        //     "video-import",
-        //     VideoImportEvent {
-        //         job_id: created_job.id as i32,
-        //         title: meta.title,
-        //         author_name: meta.author.as_ref().unwrap().name.clone(),
-        //         duration_in_seconds: duration_in_seconds as i32,
-        //         status: JobStatus::Queued,
-        //         created_at: Utc::now().timestamp() as i32,
-        //     },
-        // )?;
 
         Ok(created_job)
     }
