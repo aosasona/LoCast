@@ -2,17 +2,17 @@
 
 export type VideoDetails = { id: string; title: string; description: string; thumbnails: ThumbnailSet | null; url: string; category: string; duration_in_seconds: string; view_count: string; author: Author | null; publish_date: string }
 
-export type VideoImportEvent = { job_id: number; title: string; author_name: string; duration_in_seconds: number; status: JobStatus; created_at: number }
+export type VideoImportEvent = { job_id: number; title: string; author: Author | null; duration_in_seconds: number; status: JobStatus; created_at: number }
 
 export type SourceType = "Youtube"
+
+export type YoutubeError = "VideoNotFound" | "VideoFetchError" | "InvalidVideoDetailsProvided" | "FailedToEnqueueJob"
 
 export type Author = { id: string; name: string; thumbnails: ThumbnailSet | null; url: string }
 
 export type Thumbnail = { url: string; width: number; height: number }
 
 export type JobStatus = "queued" | "in_progress" | "completed" | "failed" | "cancelled"
-
-export type YoutubeError = "VideoNotFound" | "VideoFetchError" | "InvalidVideoDetailsProvided" | "FailedToEnqueueJob"
 
 export type ThumbnailSet = { small: Thumbnail; medium: Thumbnail; standard: Thumbnail }
 
