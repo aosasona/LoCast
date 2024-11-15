@@ -1,6 +1,6 @@
 import { Box, Button, Dialog, Flex, IconButton, Spinner, Text, TextField } from "@radix-ui/themes";
 import * as Form from "@radix-ui/react-form";
-import { FieldValues, SubmitHandler, UseFormReturn } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useEffect } from "react";
 import YouTubeSource from "$/lib/sources/youtube";
 import { readText } from "@tauri-apps/plugin-clipboard-manager";
@@ -10,17 +10,11 @@ import { subscribe } from "valtio";
 import { importStore } from "$/lib/stores/import";
 
 type Props = {
-	form: UseFormReturn<FieldValues>;
 	submitting: boolean;
 	onSubmit: SubmitHandler<FieldValues>;
 };
 export default function ImportForm(props: Props) {
-	const {
-		register,
-		handleSubmit,
-		formState: { errors },
-		reset,
-	} = props.form;
+	const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({ shouldUnregister: false });
 
 	useEffect(() => {
 		const unsubscribe = subscribe(importStore, () => {
@@ -34,7 +28,7 @@ export default function ImportForm(props: Props) {
 
 	function pasteFromClipboard() {
 		readText()
-			.then((text) => props.form.setValue("url", text))
+			.then((text) => setValue("url", text))
 			.catch(presentError);
 	}
 

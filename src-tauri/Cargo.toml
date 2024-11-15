@@ -6,6 +6,9 @@ description = "A Tauri App"
 authors = ["Ayodeji O. <ayodeji@keystroke.tools>"]
 edition = "2021"
 
+[features]
+reset_db = []
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
@@ -35,7 +38,7 @@ sqlx = { version = "0.8.2", features = [
   "runtime-tokio",
   "chrono",
   "json",
-  "migrate"
+  "migrate",
 ] }
 tokio = { version = "1.41.1", features = ["full"] }
 chrono = { version = "0.4.38", features = ["serde"] }

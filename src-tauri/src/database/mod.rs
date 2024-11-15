@@ -1,9 +1,13 @@
 mod migrations;
 
-use std::path::{Path, PathBuf};
+use std::{
+    path::{Path, PathBuf},
+    str::FromStr,
+};
 
 use migrations::MigrationManager;
-use sqlx::sqlite::SqlitePool;
+use sqlx::sqlite::{SqliteConnectOptions, SqliteJournalMode, SqlitePool};
+use sqlx::ConnectOptions as _;
 use tauri::Manager as _;
 use thiserror::Error;
 
@@ -33,6 +37,18 @@ enum DatabaseError {
 pub async fn init(app: &tauri::AppHandle) -> anyhow::Result<SqlitePool> {
     log::trace!("Initializing database pool");
 
+    // Remove the database file if it exists
+    #[cfg(debug_assertions)]
+    #[cfg(feature = "reset_db")]
+    {
+        log::warn!("Resetting database");
+        let db_path = get_database_path(app)?;
+        if db_path.exists() {
+            std::fs::remove_file(&db_path)
+                .map_err(|e| DatabaseError::FailedToCreateDatabaseFile(e.to_string()))?;
+        }
+    }
+
     // Initialize database file
     let db_path = get_database_path(app)?;
     log::debug!("Database path: {:?}", db_path);
@@ -41,9 +57,10 @@ pub async fn init(app: &tauri::AppHandle) -> anyhow::Result<SqlitePool> {
     ensure_database_dir_exists(&db_path)?;
     ensure_database_file_exists(&db_path)?;
 
-    let pool = SqlitePool::connect(format!("sqlite:{}", db_path.to_string_lossy()).as_str())
-        .await
-        .map_err(|e| DatabaseError::PoolInitializationError(e.to_string()))?;
+    let pool =
+        SqlitePool::connect(format!("sqlite:{}?mode=rwc", db_path.to_string_lossy()).as_str())
+            .await
+            .map_err(|e| DatabaseError::PoolInitializationError(e.to_string()))?;
 
     // Run migrations
     let migrations = MigrationManager::new(&pool).await?;

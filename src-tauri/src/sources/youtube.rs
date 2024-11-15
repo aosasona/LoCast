@@ -4,20 +4,20 @@ use thiserror::Error;
 
 use super::types::{Author, Thumbnail, ThumbnailSet, VideoDetails, VideoImportEvent};
 use crate::{cache::Key, queries::types::Action, AppState};
-use tauri::{AppHandle, Emitter as _};
+use tauri::Emitter as _;
 
 #[derive(Error, Debug, specta::Type)]
 pub enum YoutubeError {
-    #[error("video not found")]
+    #[error("Video not found")]
     VideoNotFound,
 
-    #[error("failed to fetch video")]
+    #[error("Failed to fetch video")]
     VideoFetchError,
 
-    #[error("invalid video details provided")]
+    #[error("Invalid video details provided")]
     InvalidVideoDetailsProvided,
 
-    #[error("failed to import video: unable to enqueue job")]
+    #[error("Failed to import video: unable to enqueue job")]
     FailedToEnqueueJob,
 }
 
@@ -30,12 +30,12 @@ impl serde::Serialize for YoutubeError {
     }
 }
 
+// TODO: support playlists
 #[tauri::command]
 pub async fn get_video_info(
     state: State<'_, AppState>,
     id: &str,
 ) -> Result<VideoDetails, YoutubeError> {
-    // let state = state.lock().await;
     let video = Video::new(id).map_err(|e| {
         log::error!("error while fetching video: {}", e);
         YoutubeError::VideoFetchError

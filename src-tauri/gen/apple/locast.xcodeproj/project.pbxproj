@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -24,37 +24,37 @@
 
 /* Begin PBXFileReference section */
 		0589E43B12728E14FBB10CD7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		0670038C1BB46E94C1D6E479 /* types.rs */ = {isa = PBXFileReference; path = types.rs; sourceTree = "<group>"; };
-		18BAE8038C3F49BAD5E9F0D3 /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
-		1E59850971B10B6DEDBCEADE /* commands.rs */ = {isa = PBXFileReference; path = commands.rs; sourceTree = "<group>"; };
-		230BE68E88DEA700AB05DB23 /* manager.rs */ = {isa = PBXFileReference; path = manager.rs; sourceTree = "<group>"; };
+		0670038C1BB46E94C1D6E479 /* types.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = types.rs; sourceTree = "<group>"; };
+		18BAE8038C3F49BAD5E9F0D3 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		1E59850971B10B6DEDBCEADE /* commands.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = commands.rs; sourceTree = "<group>"; };
+		230BE68E88DEA700AB05DB23 /* manager.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = manager.rs; sourceTree = "<group>"; };
 		27BAAA591FE415E9ED2F534D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2E0F3B99072734A89869184F /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		3484FCEA4E66F89EA85CE59D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		39262760D0B6BDDCFD766363 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		41143E1EE80BCF8F30D7A9BA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		4289E069B6C15C1160EB3B7E /* migrations.rs */ = {isa = PBXFileReference; path = migrations.rs; sourceTree = "<group>"; };
+		4289E069B6C15C1160EB3B7E /* migrations.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = migrations.rs; sourceTree = "<group>"; };
 		455BDE2280A86D502CA2F133 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		48CBE5BEAB0CD9130A5D231C /* bindings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bindings.h; sourceTree = "<group>"; };
-		4DABCA00296C09E795A5BB54 /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
-		521A4BD12D2B25BB3BF4D96B /* item.rs */ = {isa = PBXFileReference; path = item.rs; sourceTree = "<group>"; };
-		6845642C21B15712B3AB9C50 /* job.rs */ = {isa = PBXFileReference; path = job.rs; sourceTree = "<group>"; };
-		7FC182BEA59E6F2C95D4938B /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
-		8A60B9FCA6141AB9ADF19688 /* types.rs */ = {isa = PBXFileReference; path = types.rs; sourceTree = "<group>"; };
-		8EFD5160A8F17F9B6BBEC9B0 /* youtube.rs */ = {isa = PBXFileReference; path = youtube.rs; sourceTree = "<group>"; };
-		98B77322AE3449EADF5800F3 /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
+		4DABCA00296C09E795A5BB54 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		521A4BD12D2B25BB3BF4D96B /* item.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = item.rs; sourceTree = "<group>"; };
+		6845642C21B15712B3AB9C50 /* job.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = job.rs; sourceTree = "<group>"; };
+		7FC182BEA59E6F2C95D4938B /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
+		8A60B9FCA6141AB9ADF19688 /* types.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = types.rs; sourceTree = "<group>"; };
+		8EFD5160A8F17F9B6BBEC9B0 /* youtube.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = youtube.rs; sourceTree = "<group>"; };
+		98B77322AE3449EADF5800F3 /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
 		BA12564E7F6998150416E370 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = SOURCE_ROOT; };
 		D389A5FD63E8DA18C064669F /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		D3A82EA9B95506A7712678B7 /* locast_iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = locast_iOS.entitlements; sourceTree = "<group>"; };
 		D661C51A5AC26BD8FFE774A9 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
-		DF51EBD130999456C70468F5 /* main.rs */ = {isa = PBXFileReference; path = main.rs; sourceTree = "<group>"; };
-		E008D2CEF38DAF10BB0E94CA /* mod.rs */ = {isa = PBXFileReference; path = mod.rs; sourceTree = "<group>"; };
+		DF51EBD130999456C70468F5 /* main.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = main.rs; sourceTree = "<group>"; };
+		E008D2CEF38DAF10BB0E94CA /* mod.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = mod.rs; sourceTree = "<group>"; };
 		E0E0ED9B292D92616B715144 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		E2914E02473583531C020D7D /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
-		E382ADFD8A4C1BCF00D09A87 /* locast_iOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = locast_iOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0DD89EBF267DFF470A6187B /* author.rs */ = {isa = PBXFileReference; path = author.rs; sourceTree = "<group>"; };
+		E382ADFD8A4C1BCF00D09A87 /* LoCast.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoCast.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0DD89EBF267DFF470A6187B /* author.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = author.rs; sourceTree = "<group>"; };
 		F4A967B1966C75186C30CD05 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		F6E3EBBD47BE21CABB2FAB82 /* lib.rs */ = {isa = PBXFileReference; path = lib.rs; sourceTree = "<group>"; };
+		F6E3EBBD47BE21CABB2FAB82 /* lib.rs */ = {isa = PBXFileReference; lastKnownFileType = text; path = lib.rs; sourceTree = "<group>"; };
 		F867B62C7594B1A88DC8544D /* libapp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libapp.a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -144,7 +144,7 @@
 		6E8B30FD8F2A75DEC92B1099 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E382ADFD8A4C1BCF00D09A87 /* locast_iOS.app */,
+				E382ADFD8A4C1BCF00D09A87 /* LoCast.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -237,20 +237,6 @@
 			path = database;
 			sourceTree = "<group>";
 		};
-		"TEMP_170062FD-1D44-4FF8-A5BB-904BA6AFDC90" /* x86_64 */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = x86_64;
-			sourceTree = "<group>";
-		};
-		"TEMP_A09DAF41-3A10-4A87-801A-38802D8FA1CC" /* arm64 */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = arm64;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -269,7 +255,7 @@
 			);
 			name = locast_iOS;
 			productName = locast_iOS;
-			productReference = E382ADFD8A4C1BCF00D09A87 /* locast_iOS.app */;
+			productReference = E382ADFD8A4C1BCF00D09A87 /* LoCast.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -280,8 +266,6 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
-				TargetAttributes = {
-				};
 			};
 			buildConfigurationList = 5A6F6C0D7A728622EB71467D /* Build configuration list for PBXProject "LoCast" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -362,6 +346,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = locast_iOS/locast_iOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = Q37WBU54YU;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "arm64-sim x86_64";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
@@ -370,13 +355,33 @@
 					"\".\"",
 				);
 				INFOPLIST_FILE = locast_iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = LoCast;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				"LIBRARY_SEARCH_PATHS[arch=arm64-sim]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64-sim/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
-				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
-				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=arm64-sim]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/arm64-sim/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = tools.keystroke.locast;
 				PRODUCT_NAME = LoCast;
 				SDKROOT = iphoneos;
@@ -396,6 +401,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = locast_iOS/locast_iOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = Q37WBU54YU;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "arm64-sim x86_64";
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
@@ -404,13 +410,33 @@
 					"\".\"",
 				);
 				INFOPLIST_FILE = locast_iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = LoCast;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				"LIBRARY_SEARCH_PATHS[arch=arm64-sim]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64-sim/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
-				"LIBRARY_SEARCH_PATHS[arch=arm64]" = "$(inherited) $(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
-				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = "$(inherited) $(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION) $(SDKROOT)/usr/lib/swift $(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME) $(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)";
+				"LIBRARY_SEARCH_PATHS[arch=arm64-sim]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/arm64-sim/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=arm64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/arm64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
+				"LIBRARY_SEARCH_PATHS[arch=x86_64]" = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Externals/x86_64/$(CONFIGURATION)",
+					"$(SDKROOT)/usr/lib/swift",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift-5.0/$(PLATFORM_NAME)",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = tools.keystroke.locast;
 				PRODUCT_NAME = LoCast;
 				SDKROOT = iphoneos;

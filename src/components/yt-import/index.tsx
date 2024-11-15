@@ -5,7 +5,6 @@ import ImportForm from "./form";
 import Show from "../show";
 import { useMutation } from "@tanstack/react-query";
 import Overview from "./overview";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { importStore, toggleImportingFromYouTube } from "$/lib/stores/import";
 import { useSnapshot } from "valtio";
@@ -15,7 +14,6 @@ export default function YTImportModal() {
 	const store = useSnapshot(importStore);
 	const [stage, setStage] = useState<Stage>("form");
 
-	const form = useForm({ shouldUnregister: false });
 
 	// TODO: support loading playlist info
 	const mutation = useMutation({
@@ -37,7 +35,6 @@ export default function YTImportModal() {
 					<ImportForm
 						onSubmit={(data) => mutation.mutate(data.url)}
 						submitting={mutation.isPending}
-						form={form}
 					/>
 				</Show>
 
