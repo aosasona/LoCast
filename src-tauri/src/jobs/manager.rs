@@ -73,6 +73,12 @@ impl Manager {
         // Chunk the jobs into groups of max_concurrent_jobs
 
         // Spawn a new thread to process a maximum of max_concurrent_jobs jobs
+        log::info!("Starting job manager");
+    }
+
+    pub async fn stop(&self) {
+        // Stop the processing thread
+        log::info!("Stopping job manager");
     }
 
     pub async fn enqueue(
