@@ -1,4 +1,4 @@
-import { useState, memo, useCallback, useMemo } from "react";
+import { useState, memo, useCallback } from "react";
 import { Box, Button, DropdownMenu, Flex, IconButton, Tooltip } from "@radix-ui/themes";
 import { CaretRight, CaretLeft, SidebarSimple, Plus, Gear, Code } from "@phosphor-icons/react";
 import { useHotkeys } from "react-hotkeys-hook";
