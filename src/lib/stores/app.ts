@@ -39,32 +39,61 @@ const GRAY_COLORS = [
 	"sand",
 ] as const;
 
-type ColorScheme = "inherit" | "light" | "dark";
-type AccentColor = (typeof ACCENT_COLORS)[number];
-type GrayColor = (typeof GRAY_COLORS)[number];
+export type ColorScheme = "inherit" | "light" | "dark";
+export type AccentColor = (typeof ACCENT_COLORS)[number];
+export type GrayColor = (typeof GRAY_COLORS)[number];
 
-type AppStore = {
+export type AppStore = {
 	colorScheme: ColorScheme;
 	accentColor: AccentColor;
 	grayColor: GrayColor;
+	systemPreference: Omit<ColorScheme, "inherit"> | null;
 };
 
-const appStore = proxy<AppStore>({
-	colorScheme: "dark",
-	accentColor: "tomato",
-	grayColor: "gray",
-});
+function loadDefaultState(): AppStore {
+	const defaultValues: AppStore = {
+		colorScheme: "dark",
+		accentColor: "tomato",
+		grayColor: "gray",
+		systemPreference: null,
+	}
+
+	if (typeof localStorage === "undefined") {
+		return defaultValues;
+	}
+
+	if (localStorage.getItem("appStore") === null) {
+		return defaultValues;
+	}
+
+	const stored = JSON.parse(localStorage.getItem("appStore")!) as AppStore;
+	return {
+		...defaultValues,
+		...stored,
+	};
+}
+
+function saveState() {
+	if (typeof localStorage !== "undefined") {
+		localStorage.setItem("appStore", JSON.stringify(appStore));
+	}
+}
+
+const appStore = proxy<AppStore>(loadDefaultState());
 
 function setAccentColor(color: AccentColor) {
 	appStore.accentColor = color;
+	saveState();
 }
 
 function setColorScheme(scheme: ColorScheme) {
 	appStore.colorScheme = scheme;
+	saveState();
 }
 
 function setgrayColor(color: GrayColor) {
 	appStore.grayColor = color;
+	saveState();
 }
 
 export { appStore, setAccentColor, setColorScheme, setgrayColor };

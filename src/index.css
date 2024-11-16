@@ -21,11 +21,16 @@
 /* } */
 
 html {
-	@apply overscroll-none;
+	@apply overscroll-none transition-colors;
 }
 
 body {
 	@apply select-none cursor-default overflow-hidden;
+}
+
+html,
+body {
+	background: transparent;
 }
 
 button {

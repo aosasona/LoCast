@@ -49,7 +49,7 @@ export default function Layout({ children }: Props) {
 	useHotkeys(["meta+i", "ctrl+i"], () => toggleImportingFromYouTube(true));
 
 	return (
-		<Box height="100vh" width="100dvw">
+		<Box height="100vh" width="100dvw" className="sm:bg-neutral-200/95 sm:dark:bg-neutral-900/95" >
 			<Flex direction="column" height="100%" width="100%">
 				<DragBar />
 
@@ -59,7 +59,7 @@ export default function Layout({ children }: Props) {
 					<Box className="w-full h-full" p={{ sm: "3", lg: "2" }} pl="0">
 						<TopBar />
 
-						<ScrollArea scrollbars="vertical" className="md:bg-gray-100 sm:rounded-md" style={{ height: "100%" }}>
+						<ScrollArea scrollbars="vertical" className="md:bg-transparent sm:rounded-md" style={{ width: "100%", height: "100%" }}>
 							{children}
 						</ScrollArea>
 					</Box>
@@ -70,6 +70,6 @@ export default function Layout({ children }: Props) {
 				</Flex>
 				<YTImportModal />
 			</Flex>
-		</Box>
+		</Box >
 	);
 }

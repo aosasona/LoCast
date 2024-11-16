@@ -38,6 +38,26 @@ pub fn run() {
     export::ts("../src/lib/tauri/types.ts").expect("Failed to export typescript types");
 
     let app = tauri::Builder::default()
+        .setup(|app| {
+            let window = app
+                .get_webview_window("main")
+                .expect("Failed to get main window");
+
+            #[cfg(target_os = "macos")]
+            window_vibrancy::apply_vibrancy(
+                &window,
+                window_vibrancy::NSVisualEffectMaterial::HudWindow,
+                None,
+                None,
+            )
+            .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
+
+            #[cfg(target_os = "windows")]
+            window_vibrancy::apply_blur(&window, Some((18, 18, 18, 125)))
+                .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+
+            Ok(())
+        })
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_clipboard_manager::init())
         .plugin(tauri_plugin_fs::init())

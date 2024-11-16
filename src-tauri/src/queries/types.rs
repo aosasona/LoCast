@@ -1,8 +1,6 @@
-use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use sqlx::Type;
 
-#[derive(Debug, Clone, Serialize, Deserialize, Type)]
+#[derive(Debug, Clone, Serialize, Deserialize, sqlx::Type)]
 #[sqlx(rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum Action {
@@ -20,7 +18,7 @@ impl From<String> for Action {
     }
 }
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, Type)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, sqlx::Type)]
 #[sqlx(rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum ResourceType {
@@ -38,7 +36,7 @@ impl From<String> for ResourceType {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, Type, specta::Type)]
+#[derive(Debug, Serialize, Deserialize, Clone, sqlx::Type, specta::Type)]
 #[sqlx(rename_all = "snake_case")]
 #[serde(rename_all = "snake_case")]
 pub enum JobStatus {
