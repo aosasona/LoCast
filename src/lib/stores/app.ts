@@ -1,6 +1,6 @@
 import { proxy } from "valtio";
 
-const ACCENT_COLORS = [
+export const ACCENT_COLORS = [
 	"gray",
 	"gold",
 	"bronze",

@@ -11,6 +11,11 @@ export default {
 				"safe-right": "env(safe-area-inset-right)",
 			},
 			colors: {
+				background: "var(--color-background)",
+				surface: "var(--color-surface)",
+				overlay: "var(--color-overlay)",
+				"panel-solid": "var(--color-panel-solid)",
+				"panel-translucent": "var(--color-panel-translucent)",
 				dark: "hsl(var(--color-dark))",
 				body: "hsl(var(--color-body))",
 				accent: {

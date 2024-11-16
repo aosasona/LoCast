@@ -1,6 +1,6 @@
 import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { Theme } from "@radix-ui/themes";
-import { StrictMode, useCallback, useEffect, useState } from "react";
+import { StrictMode, useEffect } from "react";
 
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
