@@ -9,10 +9,13 @@ import TabBar from "./tab-bar";
 import DragBar from "./drag-bar";
 import { toggleImportingFromYouTube } from "$/lib/stores/import";
 import TopBar from "./top-bar";
+import { useNavigate } from "@tanstack/react-router";
 
 type Props = PropsWithChildren<{}>;
 
 export default function Layout({ children }: Props) {
+	const navigate = useNavigate();
+
 	// Disable right-click context menu and selection
 	useEffect(() => {
 		document.addEventListener("contextmenu", (e) => e.preventDefault(), {
@@ -47,6 +50,9 @@ export default function Layout({ children }: Props) {
 	}, []);
 
 	useHotkeys(["meta+i", "ctrl+i"], () => toggleImportingFromYouTube(true));
+	useHotkeys(["meta+b", "ctrl+b"], () => navigate({ to: "/" }), {
+		preventDefault: true,
+	});
 
 	return (
 		<Box height="100vh" width="100dvw" className="sm:bg-neutral-200/95 sm:dark:bg-neutral-900/95" >
@@ -59,7 +65,9 @@ export default function Layout({ children }: Props) {
 					<Box className="w-full h-full" p={{ sm: "3", lg: "2" }} pl="0">
 						<TopBar />
 
-						<ScrollArea scrollbars="vertical" className="md:bg-transparent sm:rounded-md" style={{ width: "100%", height: "100%" }}>
+						<ScrollArea scrollbars="vertical" className="bg-background md:bg-transparent sm:rounded-md" style={{ width: "100%", height: "100%" }}>
+							<Box display={{ sm: "none" }} className="py-safe-top">
+							</Box>
 							{children}
 						</ScrollArea>
 					</Box>

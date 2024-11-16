@@ -1,32 +1,35 @@
-import { useState, memo, useCallback } from "react";
+import { useState, memo, useCallback, useMemo } from "react";
 import { Box, Button, DropdownMenu, Flex, IconButton, Tooltip } from "@radix-ui/themes";
 import { CaretRight, CaretLeft, SidebarSimple, Plus, Gear, Code } from "@phosphor-icons/react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Show from "@ui/show";
-import { toast } from "sonner";
 import { toggleImportingFromYouTube } from "$/lib/stores/import";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useRouter } from "@tanstack/react-router";
 
 const SMALL_SIDEBAR_WIDTH = "72px";
 
 function Sidebar() {
 	const navigate = useNavigate();
+	const router = useRouter();
 	const [collapseSidebar, setCollapseSidebar] = useState(false);
 
 	useHotkeys(["ctrl+s", "meta+s"], () => setCollapseSidebar(!collapseSidebar));
 	useHotkeys(["meta+ArrowLeft", "ctrl+ArrowLeft"], goBack);
 	useHotkeys(["meta+ArrowRight", "ctrl+ArrowRight"], goForward);
+	useHotkeys(["meta+;", "ctrl+;"], () => navigate({ to: "/settings" }), {
+		preventDefault: true,
+	});
 
 	const withCollapsedState = useCallback((fallback: string) => {
 		return collapseSidebar ? SMALL_SIDEBAR_WIDTH : fallback;
 	}, [collapseSidebar]);
 
 	function goBack() {
-		toast.error("Not implemented yet");
+		router.history.back()
 	}
 
 	function goForward() {
-		toast.error("Not implemented yet");
+		router.history.forward()
 	}
 
 	return (
@@ -44,19 +47,19 @@ function Sidebar() {
 						<Flex direction="column" gap="3" align={collapseSidebar ? "center" : "start"} justify="center">
 							<Flex align="center" justify={collapseSidebar ? "center" : "between"} gap="1" width="100%" mb="2">
 								<Tooltip content={`${collapseSidebar ? "Expand" : "Collapse"} sidebar ⌘ s`}>
-									<IconButton variant="ghost" size="2" onClick={() => setCollapseSidebar(!collapseSidebar)}>
+									<IconButton variant="ghost" size="2" onClick={() => setCollapseSidebar(!collapseSidebar)} >
 										<SidebarSimple size={20} />
 									</IconButton>
 								</Tooltip>
 
 								<Flex gap="4" display={collapseSidebar ? "none" : "flex"} hidden={collapseSidebar} className="transition-all">
 									<Tooltip content="Go back ⌘ ←">
-										<IconButton size="2" variant="ghost" onClick={goBack}>
+										<IconButton size="2" variant="ghost" onClick={goBack} disabled={router.history.length <= 1}>
 											<CaretLeft />
 										</IconButton>
 									</Tooltip>
 									<Tooltip content="Go forward ⌘ →">
-										<IconButton size="2" variant="ghost" onClick={goForward}>
+										<IconButton size="2" variant="ghost" onClick={goForward} disabled={router.history.length <= 1}>
 											<CaretRight />
 										</IconButton>
 									</Tooltip>
@@ -91,7 +94,7 @@ function Sidebar() {
 
 					<hr className="border-t border-gray-300 mt-auto" />
 					<Flex width="100%" direction="row" gap="3" align="center" justify={collapseSidebar ? "center" : "between"} p="3">
-						<Tooltip content="Settings">
+						<Tooltip content="Settings ⌘;">
 							<IconButton variant="ghost" size="2" onClick={() => navigate({ to: "/settings" })}>
 								<Gear size={18} />
 							</IconButton>

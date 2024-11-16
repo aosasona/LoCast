@@ -37,6 +37,10 @@ button {
 	cursor: pointer;
 }
 
+.bar-bg {
+	@apply bg-neutral-100/80 dark:bg-neutral-900/80 backdrop-blur-lg;
+}
+
 .tab-bar-padding {
 	--padding-size: 1rem;
 

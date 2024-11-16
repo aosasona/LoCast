@@ -27,7 +27,7 @@ function TabBar() {
 				icon: DownloadSimple,
 				title: "Downloads",
 				size: 24,
-				onClick: () => {},
+				onClick: () => { },
 			},
 			{
 				icon: Gear,
@@ -47,7 +47,7 @@ function TabBar() {
 			bottom="0"
 			left="0"
 			right="0"
-			className="z-[999999] border-t border-t-gray bg-gray-50/80 backdrop-blur-lg tab-bar-padding"
+			className="z-[999999] border-t border-t-gray bar-bg tab-bar-padding"
 		>
 			<Flex width="100%" align="center" px="4" className="justify-around">
 				{tabs.map(({ icon: TabIcon, title, onClick, size }) => (
