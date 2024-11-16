@@ -8,7 +8,7 @@ use crate::{
         types::{Action, CreateJobInput, JobStatus, ResourceType},
         Queries,
     },
-    sources::types::{Author, SourceType, VideoDetails, VideoImportEvent},
+    sources::types::{Author, SourceType, VideoDetails},
 };
 
 // TODO: move all queries to the job query module
