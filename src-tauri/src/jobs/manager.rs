@@ -81,15 +81,18 @@ impl Manager {
         log::info!("Stopping job manager");
     }
 
+    // TODO: replace Action enum with trait implementations
     pub async fn enqueue(
         &self,
-        action: Action,
-        meta: Option<serde_json::Value>,
+        action: &mut Box<dyn super::actions::Action>,
     ) -> anyhow::Result<Job> {
-        match action {
-            Action::ImportYtVideo => self.create_yt_import_job(meta).await,
-            Action::CreateYtAuthor => self.create_yt_author_import_job(meta).await,
-        }
+        action.set_pool(Arc::clone(&self.db_pool));
+        action.create_job().await
+
+        // match action {
+        //     Action::ImportYtVideo => self.create_yt_import_job(meta).await,
+        //     Action::CreateYtAuthor => self.create_yt_author_import_job(meta).await,
+        // }
     }
 
     pub async fn dequeue(&self, job_id: i64) -> anyhow::Result<()> {
